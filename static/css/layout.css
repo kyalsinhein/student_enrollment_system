@@ -1,0 +1,28 @@
+/* Custom styles for the navbar */
+.navbar-custom {
+  background-color: #082355; /* Change navbar background to white */
+}
+.navbar-custom .nav-link {
+  font-size: 1.3rem; /* Increase font size for navbar links */
+}
+
+.navbar-custom .navbar-brand {
+  font-size: 1.5rem; /* Increase font size for navbar brand */
+  font-weight: bold;
+}
+.navbar-brand {
+  color: white;
+}
+.navbar-custom .navbar-nav .nav-link {
+  color: white; /* Change this color to your desired text color */
+}
+/* Footer styling to stick at the bottom with increased height */
+footer {
+  font-size: 1.2rem;
+  background-color: #082355;
+  text-align: center;
+  padding: 2rem 0; /* Increase top and bottom padding to make the footer taller */
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}

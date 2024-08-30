@@ -1,0 +1,89 @@
+/* Ensure the body takes up the full height of the viewport */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+/* Ensure the main content area expands to fill the space between navbar and footer */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex: 1; /* Makes sure the container takes up the remaining space */
+}
+
+/* Increase space between the navigation bar and the image slider */
+.carousel-container {
+  margin-top: 20px; /* Adjust this value to increase or decrease the space */
+  margin-bottom: 50px;
+}
+
+/* Custom height for slider images */
+.slider-img {
+  height: 400px; /* Adjust this value as needed */
+  object-fit: cover; /* Ensures the image covers the entire area */
+  display: block; /* Ensures image fills the container */
+  border-radius: 20px;
+}
+
+/* Container for the image and overlay */
+.carousel-img-container {
+  position: relative; /* Required for positioning the overlay */
+}
+
+/* Dimming effect */
+.carousel-img-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 1; /* Ensures overlay is on top of the image */
+  border-radius: 20px;
+}
+
+/* Center the text overlay */
+.carousel-caption {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2; /* Ensures text is above the overlay */
+}
+
+/* Style for the animative text bar */
+.text-bar {
+  position: relative;
+  z-index: 3; /* Ensures the text bar is above the image slider */
+  background-color: #c5e3f6; /* Dark background for visibility */
+  color: black; /* White text color */
+  padding: 20px 10px; /* Increase padding to make the bar taller */
+  overflow: hidden;
+  margin-bottom: 10px; /* Add margin to avoid overlap with the carousel */
+  font-size: 1.5rem; /* Increase font size for better readability */
+  line-height: 40px; /* Match the height to center the text vertically */
+  height: 80px; /* Set a fixed height */
+  width: 100%;
+  border-radius: 50px;
+}
+
+.text-bar p {
+  position: absolute;
+  white-space: nowrap;
+  animation: scroll 10s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

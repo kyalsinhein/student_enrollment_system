@@ -1,0 +1,109 @@
+{% extends "layout.html" %} {% block content %}
+<link rel="stylesheet" href="/static/css/home.css" />
+
+<!-- Text Bar (placed outside the container) -->
+<div class="text-bar">
+  <p>Welcome to Unity College - Your future starts here!</p>
+</div>
+
+<div class="container mt-4">
+  <!-- Wrapper for the image slider with extra margin -->
+  <div class="carousel-container">
+    <!-- Image Slider -->
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div
+          id="carouselExampleIndicators"
+          class="carousel slide"
+          data-bs-ride="carousel"
+        >
+          <div class="carousel-indicators">
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="0"
+              class="active"
+              aria-current="true"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="1"
+              aria-label="Slide 2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="2"
+              aria-label="Slide 3"
+            ></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="carousel-img-container">
+                <img
+                  src="../../static/images/school1.jpg"
+                  class="d-block w-100 slider-img"
+                  alt="First slide"
+                />
+                <div
+                  class="carousel-caption d-flex align-items-center justify-content-center"
+                >
+                  <h3 class="text-overlay">Welcome to Unity College</h3>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="carousel-img-container">
+                <img
+                  src="../../static/images/school2.jpg"
+                  class="d-block w-100 slider-img"
+                  alt="Second slide"
+                />
+                <div
+                  class="carousel-caption d-flex align-items-center justify-content-center"
+                >
+                  <h3 class="text-overlay">Explore Our Courses</h3>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="carousel-img-container">
+                <img
+                  src="../../static/images/school3.jpg"
+                  class="d-block w-100 slider-img"
+                  alt="Third slide"
+                />
+                <div
+                  class="carousel-caption d-flex align-items-center justify-content-center"
+                >
+                  <h3 class="text-overlay">Join Our Community</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
