@@ -13,6 +13,9 @@
 .navbar-brand {
   color: white;
 }
+.navbar-text {
+  color: white;
+}
 .navbar-custom .navbar-nav .nav-link {
   color: white; /* Change this color to your desired text color */
 }
