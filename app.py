@@ -175,7 +175,39 @@ def admin_signup():
 @app.route("/admin/dashboard")
 def admin_dashboard():
     username = session.get('username')
-    return render_template('/admin/dashboard.html', username=username)
+
+    # Fetch data for the dashboard
+    try:
+        con = sqlite3.connect("advweb.db")
+        cursor = con.cursor()
+
+        # Fetch total number of students
+        cursor.execute("SELECT COUNT(*) FROM student")
+        total_students = cursor.fetchone()[0]
+
+        # Fetch total number of courses
+        cursor.execute("SELECT COUNT(*) FROM course")
+        total_courses = cursor.fetchone()[0]
+
+        # Fetch total number of enrollments
+        cursor.execute("SELECT COUNT(*) FROM enrollment")
+        total_enrollments = cursor.fetchone()[0]
+
+    except Exception as e:
+        print(traceback.format_exc())
+        flash("An error occurred while fetching dashboard data.", 'danger')
+        total_students = total_courses = total_enrollments = 0
+    finally:
+        con.close()
+
+    return render_template(
+        '/admin/dashboard.html', 
+        username=username, 
+        total_students=total_students, 
+        total_courses=total_courses, 
+        total_enrollments=total_enrollments
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
