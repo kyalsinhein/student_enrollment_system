@@ -39,21 +39,29 @@
               <a class="nav-link" href="#">View Course</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('enroll') }}">Enrollment</a>
+              <a class="nav-link" href="{{ url_for('student_enroll') }}"
+                >Enrollment</a
+              >
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Records</a>
             </li>
             {% if username %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+              <a class="nav-link" href="{{ url_for('student_logout') }}"
+                >Logout</a
+              >
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+              <a class="nav-link" href="{{ url_for('student_signup') }}"
+                >Sign Up</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+              <a class="nav-link" href="{{ url_for('student_login') }}"
+                >Login</a
+              >
             </li>
             {% endif %}
           </ul>

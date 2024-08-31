@@ -14,7 +14,7 @@
     <div class="register-photo">
       <div class="form-container">
         <div class="image-holder"></div>
-        <form action="/student/signup" method="post">
+        <form action="/admin/signup" method="post">
           <h2 class="text-center"><strong>Sign up</strong> an account.</h2>
           <div class="form-group">
             <input
@@ -80,7 +80,7 @@
           </div>
           <div class="signupfooter">
             You already have an account?
-            <a href="{{ url_for('login') }}"> Login here. </a>
+            <a href="{{ url_for('admin_login') }}"> Login here. </a>
           </div>
         </form>
       </div>
