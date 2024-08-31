@@ -1,0 +1,31 @@
+{% extends "/admin/layout.html" %} {% block content %}
+<form method="post" action="/admin/course/add" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" name="name" />
+  </div>
+  <div class="mb-3">
+    <label for="cimage" class="form-label">Upload Image</label>
+    <input type="file" class="form-control-file" id="cimage" name="cimage" />
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      name="description"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="credit" class="form-label">Credit</label>
+    <input type="number" class="form-control" id="credit" name="credit" />
+  </div>
+  <div class="mb-3">
+    <label for="lecturer" class="form-label">Lecturer</label>
+    <input type="text" class="form-control" id="lecturer" name="lecturer" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

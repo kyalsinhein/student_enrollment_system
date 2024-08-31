@@ -1,10 +1,16 @@
 from flask import Flask, render_template, url_for, flash, redirect, request, session
+from werkzeug.utils import secure_filename
+import os
 import sqlite3
 import traceback
 import hashlib
 
 app = Flask(__name__)
 app.secret_key = 'secrete'  # Required for flash messages
+
+# Configuration for file uploads
+upload_folder = os.path.join('static', 'images', 'uploads')
+app.config['UPLOAD_FOLDER'] = upload_folder
 
 # Default Route to Choose User Type
 @app.route("/", methods=["GET", "POST"])
@@ -93,11 +99,96 @@ def home():
     username = session.get('username')
     return render_template("student/home.html", username=username)
 
-@app.route("/student/enrollment")
-def student_enroll():
-    username = session.get('username')  # Add username to context
-    return render_template("student/enroll.html", username=username)  # Pass username to template
+# View Profile Route
+@app.route("/student/profile")
+def view_profile():
+    username = session.get('username')
 
+    if not username:
+        flash("You need to log in first.", 'danger')
+        return redirect(url_for('student_login'))
+
+    try:
+        con = sqlite3.connect("advweb.db")
+        cursor = con.cursor()
+
+        # Fetch profile information for the logged-in user
+        cursor.execute("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,))
+        profile = cursor.fetchone()
+
+        if not profile:
+            flash("Profile not found.", 'danger')
+            return redirect(url_for('home'))
+
+    except Exception as e:
+        print(traceback.format_exc())
+        flash("An error occurred while fetching profile information.", 'danger')
+        profile = {}
+    finally:
+        con.close()
+
+    return render_template("student/profile.html", profile=profile, username=username)
+
+# Edit Profile Route
+@app.route("/student/profile/edit", methods=["GET", "POST"])
+def edit_profile():
+    username = session.get('username')
+
+    if not username:
+        flash("You need to log in first.", 'danger')
+        return redirect(url_for('student_login'))
+
+    if request.method == "POST":
+        first_name = request.form.get('fname')
+        last_name = request.form.get('lname')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        address = request.form.get('address')
+
+        try:
+            con = sqlite3.connect("advweb.db")
+            cursor = con.cursor()
+
+            # Update the profile information in the database
+            cursor.execute("""
+                UPDATE student 
+                SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?
+                WHERE first_name = ?
+            """, (first_name, last_name, email, phone, address, username))
+
+            con.commit()
+            session['username'] = first_name  # Update session with the new name if changed
+            flash("Profile updated successfully.", 'success')
+            return redirect(url_for('view_profile'))
+
+        except Exception as e:
+            con.rollback()
+            print(traceback.format_exc())
+            flash("An error occurred while updating profile information.", 'danger')
+        finally:
+            con.close()
+
+    else:
+        try:
+            con = sqlite3.connect("advweb.db")
+            cursor = con.cursor()
+
+            # Fetch current profile information to pre-fill the form
+            cursor.execute("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,))
+            profile = cursor.fetchone()
+
+            if not profile:
+                flash("Profile not found.", 'danger')
+                return redirect(url_for('home'))
+
+        except Exception as e:
+            print(traceback.format_exc())
+            flash("An error occurred while fetching profile information.", 'danger')
+            profile = {}
+        finally:
+            con.close()
+
+        return render_template("student/edit_profile.html", profile=profile, username=username)
 @app.route('/student/courses')
 def view_courses():
     username = session.get('username')  # Ensure username is retrieved from session
@@ -113,6 +204,11 @@ def view_courses():
     finally:
         con.close()
     return render_template('student/courses.html', courses=courses, username=username)
+
+@app.route("/student/enrollment")
+def student_enroll():
+    username = session.get('username')  # Add username to context
+    return render_template("student/enroll.html", username=username)  # Pass username to template
 
 # Student Logout Route
 @app.route("/student/logout")
@@ -224,6 +320,41 @@ def admin_dashboard():
         total_courses=total_courses, 
         total_enrollments=total_enrollments
     )
+    
+@app.route("/admin/course/add", methods=["GET", "POST"])
+def add_course():
+    username = session.get('username')
+    if request.method == "POST":
+        name = request.form['name']
+        description = request.form['description']
+        credits = request.form['credit']  # Changed to 'credits' to match form field
+        lecturer = request.form['lecturer']
+        cfile = request.files['cimage']
+        filename = secure_filename(cfile.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        cfile.save(file_path)
+        try:
+            con = sqlite3.connect("advweb.db")  
+            cursor = con.cursor()              
+            cursor.execute("INSERT INTO course (name, image, description, credits, lecturer) VALUES (?, ?, ?, ?, ?)",
+                           (name, filename, description, credits, lecturer))  # Corrected query
+            con.commit()
+            flash("Course added successfully.", 'success')
+            return redirect(url_for('admin_dashboard'))
+        except Exception as e:
+            con.rollback()
+            print(traceback.format_exc())
+            flash("An error occurred while adding the course. Please try again.", 'danger')
+        finally:
+            con.close()
+    return render_template("admin/addcourse.html", username=username)
+
+
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop('username', None)
+    return redirect(url_for('choose_user_type'))
 
 if __name__ == "__main__":
     app.run(debug=True)

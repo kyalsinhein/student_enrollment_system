@@ -1,0 +1,17 @@
+{% extends "/student/layout.html" %} {% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Profile Information</h2>
+  <div class="card">
+    <div class="card-body">
+      <p><strong>First Name:</strong> {{ profile[0] }}</p>
+      <p><strong>Last Name:</strong> {{ profile[1] }}</p>
+      <p><strong>Email:</strong> {{ profile[2] }}</p>
+      <p><strong>Phone:</strong> {{ profile[3] }}</p>
+      <p><strong>Address:</strong> {{ profile[4] }}</p>
+      <a href="{{ url_for('edit_profile') }}" class="btn btn-primary"
+        >Edit Profile</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

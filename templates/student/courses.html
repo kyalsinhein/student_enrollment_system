@@ -1,5 +1,5 @@
 {% extends "/student/layout.html" %} {% block content %}
-<link rel="stylesheet" href="/static/css/courses.css" />
+<link rel="stylesheet" href="/static/css/student/courses.css" />
 <div class="container mt-4">
   <h1 class="mb-4">Courses</h1>
   <div class="row">
@@ -7,7 +7,7 @@
     <div class="col-md-4 mb-4">
       <div class="card">
         <img
-          src="{{ url_for('static', filename='images/products/' ~ course[1]) }}"
+          src="{{ url_for('static', filename='images/uploads/' ~ course[1]) }}"
           class="card-img-top course-img"
           alt="Course Image"
         />
