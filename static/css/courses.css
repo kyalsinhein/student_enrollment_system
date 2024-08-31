@@ -1,0 +1,26 @@
+/* styles.css or courses.css */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 400px; /* Adjust height as needed */
+  width: 250px; /* Adjust width as needed */
+  border: 1px solid #ddd; /* Optional border for visibility */
+  border-radius: 8px; /* Optional border-radius for rounded corners */
+  overflow: hidden; /* Ensures content stays within card */
+}
+
+.card-img-top {
+  height: 50%; /* Adjust height as needed, smaller relative to card */
+  width: auto; /* Maintain aspect ratio */
+  max-width: 100%; /* Ensure the image does not overflow the card width */
+  object-fit: cover; /* Ensures image covers the area without distortion */
+  margin: 0 auto; /* Center image horizontally */
+}
+
+.card-body {
+  height: 50%; /* Adjust height as needed, remaining space for content */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers content vertically */
+  padding: 1rem; /* Adjust padding as needed */
+}

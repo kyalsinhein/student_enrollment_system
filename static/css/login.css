@@ -7,7 +7,7 @@
 .register-photo .image-holder {
   display: table-cell;
   width: auto;
-  background: url(../../static/images/Login.jpg);
+  background: url(../../static/images/theme/Login.jpg);
   background-size: cover;
 }
 

@@ -1,0 +1,25 @@
+{% extends "/student/layout.html" %} {% block content %}
+<link rel="stylesheet" href="/static/css/courses.css" />
+<div class="container mt-4">
+  <h1 class="mb-4">Courses</h1>
+  <div class="row">
+    {% if courses %} {% for course in courses %}
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <img
+          src="{{ url_for('static', filename='images/products/' ~ course[1]) }}"
+          class="card-img-top course-img"
+          alt="Course Image"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ course[0] }}</h5>
+          <p class="card-text">{{ course[2] }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <p>No courses available.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -46,7 +46,7 @@ def student_login():
         finally:
             con.close()
 
-    return render_template("/student/login.html", title="Student Login")
+    return render_template("student/login.html", title="Student Login")
 
 # Student Signup Route
 @app.route("/student/signup", methods=["GET", "POST"])
@@ -62,7 +62,7 @@ def student_signup():
 
         if not password or not confirm_password or password != confirm_password:
             flash("Passwords do not match or are missing. Please try again.", 'danger')
-            return render_template("/student/signup.html", title="Student Signup")
+            return render_template("student/signup.html", title="Student Signup")
 
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
@@ -85,17 +85,34 @@ def student_signup():
         finally:
             con.close()
 
-    return render_template("/student/signup.html", title="Student Signup")
+    return render_template("student/signup.html", title="Student Signup")
 
 # Student Home Route
 @app.route("/student/home")
 def home():
     username = session.get('username')
-    return render_template('/student/home.html', username=username)
+    return render_template("student/home.html", username=username)
 
 @app.route("/student/enrollment")
 def student_enroll():
-    return render_template('/student/enroll.html')
+    username = session.get('username')  # Add username to context
+    return render_template("student/enroll.html", username=username)  # Pass username to template
+
+@app.route('/student/courses')
+def view_courses():
+    username = session.get('username')  # Ensure username is retrieved from session
+    try:
+        con = sqlite3.connect('advweb.db')
+        cursor = con.cursor()
+        cursor.execute("SELECT name, image, description FROM course")
+        courses = cursor.fetchall()
+    except Exception as e:
+        print(traceback.format_exc())
+        flash("An error occurred while fetching courses.", 'danger')
+        courses = []
+    finally:
+        con.close()
+    return render_template('student/courses.html', courses=courses, username=username)
 
 # Student Logout Route
 @app.route("/student/logout")
@@ -130,7 +147,7 @@ def admin_login():
         finally:
             con.close()
 
-    return render_template("/admin/login.html", title="Admin Login")
+    return render_template("admin/login.html", title="Admin Login")
 
 # Admin Signup Route (if needed)
 @app.route("/admin/signup", methods=["GET", "POST"])
@@ -146,7 +163,7 @@ def admin_signup():
 
         if not password or not confirm_password or password != confirm_password:
             flash("Passwords do not match or are missing. Please try again.", 'danger')
-            return render_template("/admin/signup.html", title="Admin Signup")
+            return render_template("admin/signup.html", title="Admin Signup")
 
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
@@ -169,7 +186,7 @@ def admin_signup():
         finally:
             con.close()
 
-    return render_template("/admin/signup.html", title="Admin Signup")
+    return render_template("admin/signup.html", title="Admin Signup")
 
 # Admin Dashboard Route
 @app.route("/admin/dashboard")
@@ -201,13 +218,12 @@ def admin_dashboard():
         con.close()
 
     return render_template(
-        '/admin/dashboard.html', 
+        "admin/dashboard.html", 
         username=username, 
         total_students=total_students, 
         total_courses=total_courses, 
         total_enrollments=total_enrollments
     )
-
 
 if __name__ == "__main__":
     app.run(debug=True)
