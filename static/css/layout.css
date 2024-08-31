@@ -24,99 +24,36 @@ body {
 .navbar-custom {
   background-color: #003366; /* Dark Blue */
   color: #ffffff; /* Text color: White */
-  height: 80px; /* Increase the height of the navbar */
-  line-height: 80px; /* Align text vertically */
 }
 
+/* Default navbar padding and link styling */
 .navbar-custom .navbar-brand,
 .navbar-custom .nav-link {
   color: #ffffff; /* Text color: White */
   font-family: "Roboto", sans-serif; /* Font for the navbar */
+  padding: 0.5rem 1rem; /* Default padding for smaller screens */
 }
 
 .navbar-custom .nav-link:hover {
   color: #ff4500; /* Accent color: Orange Red */
 }
 
+/* Larger screens: Maintain fixed height */
+@media (min-width: 768px) {
+  .navbar-custom {
+    height: 80px; /* Fixed height for larger screens */
+  }
+
+  .navbar-custom .navbar-brand,
+  .navbar-custom .nav-link {
+    line-height: 80px; /* Center the text vertically */
+  }
+}
+
 /* Style for the username display */
 .navbar-text {
   color: #ffffff; /* White text color for the username */
   font-family: "Roboto", sans-serif; /* Font for the username */
-}
-
-/* Increase space between the navigation bar and the image slider */
-.carousel-container {
-  margin-top: 20px; /* Adjust this value to increase or decrease the space */
-  margin-bottom: 50px;
-}
-
-/* Custom height for slider images */
-.slider-img {
-  height: 400px; /* Adjust this value as needed */
-  object-fit: cover; /* Ensures the image covers the entire area */
-  display: block; /* Ensures image fills the container */
-  border-radius: 20px;
-}
-
-/* Container for the image and overlay */
-.carousel-img-container {
-  position: relative; /* Required for positioning the overlay */
-}
-
-/* Dimming effect */
-.carousel-img-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  z-index: 1; /* Ensures overlay is on top of the image */
-  border-radius: 20px;
-}
-
-/* Center the text overlay */
-.carousel-caption {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 2; /* Ensures text is above the overlay */
-  font-family: "Roboto", sans-serif; /* Font for the carousel caption */
-}
-
-/* Style for the animative text bar */
-.text-bar {
-  position: relative;
-  z-index: 3; /* Ensures the text bar is above the image slider */
-  background-color: #ffc107; /* Accent color: Amber */
-  color: #000000; /* Text color: Black */
-  padding: 20px 10px; /* Increase padding to make the bar taller */
-  overflow: hidden;
-  margin-bottom: 10px; /* Add margin to avoid overlap with the carousel */
-  font-size: 1.2em; /* Increase font size for better readability */
-  line-height: 80px; /* Match the height to center the text vertically */
-  height: 80px; /* Set a fixed height */
-  width: 100%;
-  border-radius: 50px;
-  font-family: "Merriweather", serif; /* Font for the text bar */
-}
-
-.text-bar p {
-  position: absolute;
-  white-space: nowrap;
-  animation: scroll 10s linear infinite;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
 }
 
 /* Footer Styling */

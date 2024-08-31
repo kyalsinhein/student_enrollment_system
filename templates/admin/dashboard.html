@@ -12,7 +12,7 @@
   </head>
   <body>
     <button class="sidebar-toggler d-lg-none" id="sidebarToggler">
-      ☰ Menu
+      ☰ Options
     </button>
 
     <div class="sidebar">
@@ -61,7 +61,9 @@
               <a class="nav-link" href="#">Profile</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Logout</a>
+              <a class="nav-link" href="{{ url_for('student_logout') }}"
+                >Logout</a
+              >
             </li>
           </ul>
         </div>
