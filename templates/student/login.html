@@ -12,54 +12,55 @@
   </head>
   <body>
     <div class="register-photo">
-      <div class="form-container">
+      <div class="container">
         <div class="image-holder"></div>
-
-        <form method="post" action="/student/login">
-          <h2 class="text-center"><strong>Login</strong> to your account.</h2>
-          <div class="form-group">
-            <input
-              class="form-control"
-              type="email"
-              name="email"
-              placeholder="Email"
-              required
-            />
-          </div>
-          <br />
-          <div class="form-group">
-            <input
-              class="form-control"
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-            />
-          </div>
-          <br />
-          <!-- Flash message block -->
-          {% with messages = get_flashed_messages(with_categories=true) %} {% if
-          messages %}
-          <div>
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }}" role="alert">
-              {{ message }}
+        <div class="form-container">
+          <form method="post" action="/student/login">
+            <h2 class="text-center"><strong>Login</strong> to your account.</h2>
+            <div class="form-group">
+              <input
+                class="form-control"
+                type="email"
+                name="email"
+                placeholder="Email"
+                required
+              />
             </div>
-            {% endfor %}
-          </div>
-          {% endif %} {% endwith %}
-          <!-- End of Flash message block -->
-          <br />
-          <div class="form-group">
-            <button class="btn btn-primary btn-block" type="submit">
-              Login
-            </button>
-          </div>
-          <p class="text-center already">
-            Don't have an account?
-            <a href="{{ url_for('student_signup') }}">Sign up here</a>
-          </p>
-        </form>
+            <br />
+            <div class="form-group">
+              <input
+                class="form-control"
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+            </div>
+            <br />
+            <!-- Flash message block -->
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %}
+            <div>
+              {% for category, message in messages %}
+              <div class="alert alert-{{ category }}" role="alert">
+                {{ message }}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %} {% endwith %}
+            <!-- End of Flash message block -->
+            <br />
+            <div class="form-group">
+              <button class="btn btn-primary btn-block" type="submit">
+                Login
+              </button>
+            </div>
+            <p class="text-center already">
+              Don't have an account?
+              <a href="{{ url_for('student_signup') }}">Sign up here</a>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

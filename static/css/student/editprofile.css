@@ -1,0 +1,18 @@
+/* styles.css */
+
+.form-container {
+  max-width: 400px; /* Reduce the width to make the form smaller */
+  margin: 0 auto; /* Center the form container */
+  background-color: white; /* Set the background color to white */
+  padding: 20px; /* Add some padding inside the form */
+  border-radius: 8px; /* Optional: Add rounded corners */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+
+.form-container .btn {
+  width: auto;
+  padding: 8px 16px;
+  font-size: 14px;
+  display: block;
+  margin: 20px auto 0;
+}

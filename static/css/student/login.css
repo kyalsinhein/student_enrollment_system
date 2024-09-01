@@ -1,36 +1,49 @@
 /* General Styles */
+body,
+html {
+  height: 100%;
+  margin: 0;
+}
+
 .register-photo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensure the container covers the full viewport height */
   background: #f1f7fc;
-  padding: 80px 0;
+}
+
+.register-photo .container {
+  display: flex;
+  width: 90%;
+  max-width: 900px; /* Set a maximum width for the container */
+  height: 400px; /* Set a fixed height for the container */
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.register-photo .image-holder,
+.register-photo .form-container {
+  flex: 1;
 }
 
 .register-photo .image-holder {
-  display: table-cell;
-  width: auto;
-  background: url(../../../static/images/theme/Login.jpg);
+  background: url(/static/images/theme/Login.jpg) no-repeat center center;
   background-size: cover;
 }
 
 .register-photo .form-container {
-  display: table;
-  max-width: 900px;
-  width: 90%;
-  margin: 0 auto;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-}
-
-.register-photo form {
-  display: table-cell;
-  width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #ffffff;
-  padding: 40px 60px;
-  color: #505e6c;
+  padding: 40px;
 }
 
-@media (max-width: 991px) {
-  .register-photo form {
-    padding: 40px;
-  }
+/* Form Styles */
+.register-photo form {
+  width: 100%;
+  max-width: 400px; /* Ensures form doesn't exceed this width */
+  color: #505e6c;
 }
 
 /* Header Styles */

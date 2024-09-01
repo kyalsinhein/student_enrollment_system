@@ -1,0 +1,18 @@
+.profile-card {
+  max-width: 500px; /* Reduced width */
+  margin: 0 auto; /* Center the card horizontally */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body p {
+  text-align: justify; /* Justify the text inside the card */
+}
+
+.card-body h2 {
+  text-align: center; /* Center the title inside the card */
+}
+
+.card-body .btn {
+  margin-top: 20px; /* Add some space between text and button */
+}
