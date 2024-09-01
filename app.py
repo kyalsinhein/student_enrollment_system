@@ -189,6 +189,7 @@ def edit_profile():
             con.close()
 
         return render_template("student/edit_profile.html", profile=profile, username=username)
+    
 @app.route('/student/courses')
 def view_courses():
     username = session.get('username')  # Ensure username is retrieved from session
@@ -320,7 +321,30 @@ def admin_dashboard():
         total_courses=total_courses, 
         total_enrollments=total_enrollments
     )
-    
+
+@app.route("/admin/courses", methods=["GET"])
+def admin_view_courses():
+    username = session.get('username')
+    con = sqlite3.connect("advweb.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM course")
+    courses = cursor.fetchall()
+    con.close()
+
+    courses = [
+        {
+            "id": course[0],
+            "name": course[1],
+            "description": course[2],
+            "credits": course[3],
+            "lecturer": course[4],
+        }
+        for course in courses
+    ]
+
+    return render_template("admin/courses.html", courses=courses, username = username)
+
+
 @app.route("/admin/course/add", methods=["GET", "POST"])
 def add_course():
     username = session.get('username')
@@ -349,7 +373,59 @@ def add_course():
             con.close()
     return render_template("admin/addcourse.html", username=username)
 
+@app.route("/edit/<eid>")
+def editEmp(eid):
+    employee = None
+    try:                
+        conn = sqlite3.connect('emp.db')
+        conn.row_factory = sqlite3.Row # if it is not included, row[0] but now row['colname'] 
+        cursor = conn.cursor()
+        cursor.execute("select * from employee where empid=?",(eid,))
+        employee = cursor.fetchone()         
+        
+    except Exception as e:
+        print(e )
+        print(e.__getstate__)
+        return f" employee data {employee}"
+    #print(employee['empname'])
+    return render_template("emp_edit.html",emp = employee)
 
+@app.route("/emp_update",methods=["GET","POST"])
+def emp_update():
+    if request.method =="POST":
+        try:
+            id=int(request.form['empid'])
+            name=request.form['ename']
+            age =int( request.form['age'])
+            degree = request.form['degree']
+            position = request.form['position']
+            email = request.form['email']            
+            conn = sqlite3.connect("emp.db")
+            cursor = conn.cursor()
+            cursor.execute("update employee set empname=?, empage=?, empdg=?, emppos=?,empemail=?\
+                where empid=?",(name,age,degree,position,email,id))
+            conn.commit()
+            flash("update success","success")
+            return redirect(url_for('view_employee'))
+        except Exception as e:
+            print(e)
+            print(traceback.format_exc())
+            return "Error "
+    else:
+        return "something"
+
+@app.route("/delete/<id>")
+def deleteEmp(id):
+    try:
+        conn = sqlite3.connect('emp.db')
+        cursor = conn.cursor();
+        cursor.execute("delete from employee where empid=?",(id,))
+        conn.commit()
+        flash("Employee has been deleted successfully",'success')
+        return redirect(url_for("view_employee"))
+    except Exception as e:
+        print(traceback.format_exc())
+        return "None"
 
 @app.route("/admin/logout")
 def admin_logout():

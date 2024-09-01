@@ -1,0 +1,81 @@
+/* layout.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0; /* Remove default margin */
+}
+
+#sidebar.custom-sidebar {
+  background-color: #000000;
+  color: #ffffff;
+  height: 100vh;
+  padding-top: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px; /* Default width */
+  transition: transform 0.3s ease; /* Smooth transition */
+  transform: translateX(0); /* Start visible */
+  z-index: 1000; /* Ensure sidebar is on top */
+}
+
+#sidebar.custom-sidebar.collapsed {
+  transform: translateX(-250px); /* Move sidebar off-screen by its width */
+}
+
+#sidebar.custom-sidebar .nav-link {
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+}
+
+#sidebar.custom-sidebar .nav-link.active {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+#sidebar.custom-sidebar .nav-link:hover {
+  background-color: #444444;
+}
+
+#sidebarToggle {
+  position: absolute;
+  top: 1rem;
+  right: -3rem; /* Position it outside the sidebar */
+  font-size: 1.5rem; /* Increase icon size */
+  border: none; /* Remove border */
+  background: none; /* Remove background */
+  color: red; /* Change icon color to red */
+  z-index: 1100; /* Ensure toggle button is on top */
+}
+
+#sidebarToggle .fa-chevron-right {
+  transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+#sidebar.custom-sidebar.collapsed ~ #sidebarToggle .fa-chevron-right {
+  transform: rotate(180deg); /* Rotate arrow when sidebar is collapsed */
+}
+
+.main-content {
+  margin-left: 250px; /* Offset by sidebar width */
+  padding: 2rem;
+  transition: margin-left 0.3s ease; /* Smooth transition */
+}
+
+#sidebar.custom-sidebar.collapsed ~ .main-content {
+  margin-left: 0; /* Remove margin when sidebar is collapsed */
+}
+
+@media (max-width: 767px) {
+  #sidebar.custom-sidebar {
+    width: 250px; /* Keep fixed width on smaller screens */
+  }
+
+  #sidebarToggle {
+    display: block; /* Show toggle button on smaller screens */
+  }
+
+  .main-content {
+    margin-left: 0; /* No margin on smaller screens */
+    padding: 1rem; /* Adjust padding for small screens */
+  }
+}
