@@ -1,7 +1,6 @@
-/* layout.css */
 body {
   font-family: Arial, sans-serif;
-  margin: 0; /* Remove default margin */
+  margin: 0;
 }
 
 #sidebar.custom-sidebar {
@@ -13,9 +12,9 @@ body {
   top: 0;
   left: 0;
   width: 250px; /* Default width */
-  transition: transform 0.3s ease; /* Smooth transition */
-  transform: translateX(0); /* Start visible */
-  z-index: 1000; /* Ensure sidebar is on top */
+  transition: transform 0.3s ease, width 0.3s ease;
+  transform: translateX(0);
+  z-index: 1000;
 }
 
 #sidebar.custom-sidebar.collapsed {
@@ -39,43 +38,54 @@ body {
 #sidebarToggle {
   position: absolute;
   top: 1rem;
-  right: -3rem; /* Position it outside the sidebar */
-  font-size: 1.5rem; /* Increase icon size */
-  border: none; /* Remove border */
-  background: none; /* Remove background */
-  color: red; /* Change icon color to red */
-  z-index: 1100; /* Ensure toggle button is on top */
+  right: -3rem;
+  font-size: 1.5rem;
+  border: none;
+  background: none;
+  color: red;
+  z-index: 1100;
 }
 
-#sidebarToggle .fa-chevron-right {
-  transition: transform 0.3s ease; /* Smooth transition for rotation */
-}
-
-#sidebar.custom-sidebar.collapsed ~ #sidebarToggle .fa-chevron-right {
-  transform: rotate(180deg); /* Rotate arrow when sidebar is collapsed */
+#sidebarToggle .toggle-icon {
+  transition: transform 0.3s ease;
 }
 
 .main-content {
-  margin-left: 250px; /* Offset by sidebar width */
+  margin-left: 250px;
   padding: 2rem;
-  transition: margin-left 0.3s ease; /* Smooth transition */
+  transition: margin-left 0.3s ease, padding 0.3s ease;
 }
 
 #sidebar.custom-sidebar.collapsed ~ .main-content {
-  margin-left: 0; /* Remove margin when sidebar is collapsed */
+  margin-left: 0;
+}
+
+@media (max-width: 1024px) {
+  #sidebar.custom-sidebar {
+    width: 200px; /* Reduce sidebar width on medium screens */
+  }
+
+  .main-content {
+    margin-left: 200px;
+  }
 }
 
 @media (max-width: 767px) {
   #sidebar.custom-sidebar {
-    width: 250px; /* Keep fixed width on smaller screens */
+    width: 200px; /* Fix sidebar width on smaller screens */
+    transform: translateX(-200px); /* Initially hide the sidebar */
+  }
+
+  #sidebar.custom-sidebar.collapsed {
+    transform: translateX(0); /* Show the sidebar when toggled */
   }
 
   #sidebarToggle {
-    display: block; /* Show toggle button on smaller screens */
+    display: block;
   }
 
   .main-content {
-    margin-left: 0; /* No margin on smaller screens */
-    padding: 1rem; /* Adjust padding for small screens */
+    margin-left: 0;
+    padding: 1rem;
   }
 }
