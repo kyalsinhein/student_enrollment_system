@@ -1,0 +1,16 @@
+/* Ensure the image fits well in the table */
+.course-img {
+  max-width: 100px;
+  height: auto;
+}
+
+/* Optional: Adjust padding and margins if needed */
+.table td,
+.table th {
+  padding: 0.75rem;
+}
+
+.table {
+  margin-bottom: 1rem;
+  background-color: transparent;
+}

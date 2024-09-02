@@ -335,9 +335,10 @@ def admin_view_courses():
         {
             "id": course[0],
             "name": course[1],
-            "description": course[2],
-            "credits": course[3],
-            "lecturer": course[4],
+            "image": course[2],
+            "description": course[3],
+            "credits": course[4],
+            "lecturer": course[5],
         }
         for course in courses
     ]
@@ -364,7 +365,7 @@ def add_course():
                            (name, filename, description, credits, lecturer))  # Corrected query
             con.commit()
             flash("Course added successfully.", 'success')
-            return redirect(url_for('admin_dashboard'))
+            return redirect(url_for('admin_view_courses'))
         except Exception as e:
             con.rollback()
             print(traceback.format_exc())
@@ -373,59 +374,23 @@ def add_course():
             con.close()
     return render_template("admin/addcourse.html", username=username)
 
-@app.route("/edit/<eid>")
-def editEmp(eid):
-    employee = None
-    try:                
-        conn = sqlite3.connect('emp.db')
-        conn.row_factory = sqlite3.Row # if it is not included, row[0] but now row['colname'] 
-        cursor = conn.cursor()
-        cursor.execute("select * from employee where empid=?",(eid,))
-        employee = cursor.fetchone()         
-        
-    except Exception as e:
-        print(e )
-        print(e.__getstate__)
-        return f" employee data {employee}"
-    #print(employee['empname'])
-    return render_template("emp_edit.html",emp = employee)
-
-@app.route("/emp_update",methods=["GET","POST"])
-def emp_update():
-    if request.method =="POST":
-        try:
-            id=int(request.form['empid'])
-            name=request.form['ename']
-            age =int( request.form['age'])
-            degree = request.form['degree']
-            position = request.form['position']
-            email = request.form['email']            
-            conn = sqlite3.connect("emp.db")
-            cursor = conn.cursor()
-            cursor.execute("update employee set empname=?, empage=?, empdg=?, emppos=?,empemail=?\
-                where empid=?",(name,age,degree,position,email,id))
-            conn.commit()
-            flash("update success","success")
-            return redirect(url_for('view_employee'))
-        except Exception as e:
-            print(e)
-            print(traceback.format_exc())
-            return "Error "
-    else:
-        return "something"
-
-@app.route("/delete/<id>")
-def deleteEmp(id):
+@app.route("/admin/courses/delete/<int:id>", methods=["POST"])
+def delete_course(id):
     try:
-        conn = sqlite3.connect('emp.db')
-        cursor = conn.cursor();
-        cursor.execute("delete from employee where empid=?",(id,))
-        conn.commit()
-        flash("Employee has been deleted successfully",'success')
-        return redirect(url_for("view_employee"))
+        con = sqlite3.connect("advweb.db")
+        cursor = con.cursor()
+        cursor.execute("DELETE FROM course WHERE id = ?", (id,))
+        con.commit()
+        flash("Course deleted successfully.", 'success')
     except Exception as e:
+        con.rollback()
         print(traceback.format_exc())
-        return "None"
+        flash("An error occurred while deleting the course. Please try again.", 'danger')
+    finally:
+        con.close()
+    
+    return redirect(url_for('admin_view_courses'))
+
 
 @app.route("/admin/logout")
 def admin_logout():
