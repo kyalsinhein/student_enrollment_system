@@ -6,6 +6,25 @@
     >Add Course</a
   >
 
+  <!-- Flash Messages -->
+  <div id="flash-messages-container">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div
+      class="alert alert-{{ category }} alert-dismissible fade show"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+  </div>
+
   <div class="table-responsive">
     <table class="table table-striped">
       <thead>
@@ -55,4 +74,19 @@
     </table>
   </div>
 </div>
+
+<!-- Include jQuery and Bootstrap JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // Display flash messages
+    $("#flash-messages-container .alert").alert();
+    // Automatically hide the alert after 5 seconds
+    setTimeout(function () {
+      $("#flash-messages-container .alert").alert("close");
+    }, 5000);
+  });
+</script>
 {% endblock %}

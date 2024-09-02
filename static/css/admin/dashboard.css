@@ -2,10 +2,13 @@
 .card {
   border: 1px solid #dee2e6;
   border-radius: 0.375rem;
+  background-color: black; /* Set the background color to black */
+  color: white; /* Set the text color to white */
 }
 
 .card-body {
   text-align: center;
+  color: inherit; /* Inherit text color from the card */
 }
 
 @media (max-width: 767.98px) {

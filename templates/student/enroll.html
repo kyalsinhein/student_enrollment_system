@@ -12,52 +12,41 @@
             <h2 class="fs-6 fw-normal text-center text-secondary mb-4">
               Enroll Your Course
             </h2>
-            <form action="#!">
+            <form action="{{ url_for('student_enroll') }}" method="POST">
               <div class="row gy-2 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
                     <input
                       type="text"
                       class="form-control"
-                      name="firstName"
-                      id="firstName"
-                      placeholder="First Name"
-                      required
+                      value="{{ full_name }}"
+                      readonly
+                      placeholder="Name"
                     />
-                    <label for="firstName" class="form-label">First Name</label>
+                    <label for="name" class="form-label">Name</label>
                   </div>
                 </div>
                 <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="lastName"
-                      id="lastName"
-                      placeholder="Last Name"
+                    <select
+                      class="form-select"
+                      name="course_id"
+                      id="course_id"
                       required
-                    />
-                    <label for="lastName" class="form-label">Last Name</label>
-                  </div>
-                </div>
-                <div class="col-12">
-                  <div class="form-floating mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="course"
-                      id="course"
-                      placeholder="Course"
-                      required
-                    />
-                    <label for="lastName" class="form-label">Course</label>
+                    >
+                      <option value="" disabled selected>Select Course</option>
+                      {% for course in courses %}
+                      <option value="{{ course[0] }}">{{ course[1] }}</option>
+                      {% endfor %}
+                    </select>
+                    <label for="course_id" class="form-label">Course</label>
                   </div>
                 </div>
 
                 <div class="col-12">
                   <div class="d-grid my-3">
                     <button class="btn btn-primary btn-lg" type="submit">
-                      Sign up
+                      Enroll
                     </button>
                   </div>
                 </div>
