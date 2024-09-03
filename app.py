@@ -160,10 +160,11 @@ def view_courses():
 
 @app.route('/student/courses/detail/<int:course_id>')
 def course_detail(course_id):
+    username = session.get('username')
     try:
         course = query_db("SELECT name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,), one=True)
         if course:
-            return render_template('student/course_detail.html', course=course)
+            return render_template('student/course_detail.html', course=course, username=username)
         else:
             return "Course not found", 404
     except Exception as e:

@@ -7,6 +7,7 @@
         src="{{ url_for('static', filename='images/uploads/' ~ course[1]) }}"
         alt="Course Image"
         class="img-fluid mb-3"
+        style="width: 250px; height: 250px; object-fit: cover"
       />
       <p class="card-text"><strong>Description:</strong> {{ course[2] }}</p>
       <p class="card-text"><strong>Credits:</strong> {{ course[3] }}</p>
