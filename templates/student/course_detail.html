@@ -1,0 +1,20 @@
+{% extends "/student/layout.html" %} {% block content %}
+<div class="container mt-4">
+  <div class="card mx-auto" style="max-width: 600px; background-color: white">
+    <div class="card-body text-center">
+      <h1 class="card-title">{{ course[0] }}</h1>
+      <img
+        src="{{ url_for('static', filename='images/uploads/' ~ course[1]) }}"
+        alt="Course Image"
+        class="img-fluid mb-3"
+      />
+      <p class="card-text"><strong>Description:</strong> {{ course[2] }}</p>
+      <p class="card-text"><strong>Credits:</strong> {{ course[3] }}</p>
+      <p class="card-text"><strong>Lecturer:</strong> {{ course[4] }}</p>
+      <a href="{{ url_for('view_courses') }}" class="btn btn-primary mt-3"
+        >Back to Courses</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

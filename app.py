@@ -152,11 +152,25 @@ def edit_profile():
 def view_courses():
     username = session.get('username')
     try:
-        courses = query_db("SELECT name, image, description FROM course")
+        courses = query_db("SELECT id,name, image, description FROM course")
     except Exception as e:
         print(traceback.format_exc())
         courses = []
     return render_template('student/courses.html', courses=courses, username=username)
+
+@app.route('/student/courses/detail/<int:course_id>')
+def course_detail(course_id):
+    try:
+        course = query_db("SELECT name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,), one=True)
+        if course:
+            return render_template('student/course_detail.html', course=course)
+        else:
+            return "Course not found", 404
+    except Exception as e:
+        print(traceback.format_exc())
+        return "An error occurred while fetching course details.", 500
+
+
 
 @app.route("/student/enrollment", methods=["GET", "POST"])
 def student_enroll():

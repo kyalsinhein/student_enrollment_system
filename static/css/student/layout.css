@@ -22,7 +22,7 @@ body {
 
 /* Navbar Customization */
 .navbar-custom {
-  background-color: #003366; /* Dark Blue */
+  background-color: #0a203a; /* Dark Blue */
   color: #ffffff; /* Text color: White */
 }
 
@@ -38,6 +38,52 @@ body {
   color: #ff4500; /* Accent color: Orange Red */
 }
 
+/* Sidebar styling for smaller screens */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px; /* Hide sidebar off-screen to the left */
+  height: 100%;
+  width: 250px; /* Adjust width as needed */
+  background-color: #0a203a; /* Dark Blue */
+  color: #ffffff; /* Text color: White */
+  transition: left 0.3s ease; /* Smooth sliding effect */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+  z-index: 1050; /* Ensure sidebar is above other content */
+  padding-top: 60px; /* Space for the top of the sidebar */
+}
+
+/* Ensure the sidebar menu is visible when toggled */
+.sidebar.show {
+  left: 0; /* Show sidebar */
+}
+
+/* Toggle button and icons color */
+#sidebarToggle {
+  color: #ffffff; /* Ensure the button text is white */
+}
+
+#sidebarToggle .toggle-icon {
+  color: #ffffff !important; /* Ensure the toggle icons are white */
+}
+
+/* Sidebar menu items */
+.sidebar .nav-link {
+  color: #ffffff; /* Text color: White */
+  padding: 1rem; /* Add padding for spacing */
+}
+
+.sidebar .nav-link:hover {
+  color: #ff4500; /* Accent color: Orange Red */
+}
+
+/* Change the color of the btn-close button to white */
+.btn-close {
+  background-color: #ffffff !important;
+}
+.navbar-toggler {
+  background-color: white;
+}
 /* Larger screens: Maintain fixed height */
 @media (min-width: 768px) {
   .navbar-custom {
@@ -57,12 +103,51 @@ body {
 }
 
 /* Footer Styling */
-footer {
-  background-color: #003366; /* Dark Blue */
-  color: #ffffff; /* Text color: White */
-  text-align: center;
-  padding: 10px;
-  font-family: "Open Sans", sans-serif; /* Font for the footer */
+.footer {
+  background-color: #0a203a; /* Dark Blue */
+  color: #ffffff;
+  padding: 40px 0;
+  font-family: "Open Sans", sans-serif;
+}
+
+.footer h5 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.footer p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.footer .footer-link {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer .footer-link:hover {
+  color: #ff4500;
+}
+
+.footer .social-icons {
+  margin-top: 10px;
+}
+
+.footer .social-icons a {
+  color: #ffffff;
+  margin-right: 15px;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.footer .social-icons a:hover {
+  color: #ff4500;
+}
+
+.footer-hr {
+  border-color: #444;
+  margin: 20px 0;
 }
 
 /* Button Styles */

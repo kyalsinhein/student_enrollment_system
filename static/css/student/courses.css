@@ -24,3 +24,14 @@
   justify-content: center; /* Centers content vertically */
   padding: 1rem; /* Adjust padding as needed */
 }
+
+.btn-primary {
+  background-color: #ff7043; /* Primary button color */
+  color: #ffffff; /* Button text color */
+  border: none; /* Remove border */
+  padding: 0.5rem 1rem; /* Padding for button */
+}
+
+.btn-primary:hover {
+  background-color: #ff7043;
+}

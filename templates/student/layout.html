@@ -15,6 +15,10 @@
       rel="stylesheet"
     />
     <link href="/static/css/student/layout.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
   </head>
   <body>
     <!-- Navbar -->
@@ -25,8 +29,8 @@
           class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
+          data-bs-target="#sidebarMenu"
+          aria-controls="sidebarMenu"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
@@ -78,13 +82,121 @@
       </div>
     </nav>
 
+    <!-- Sidebar -->
+    <div class="sidebar collapse" id="sidebarMenu">
+      <button
+        class="btn-close"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu"
+        aria-label="Close"
+      ></button>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('view_profile') }}"
+            >Profile Detail</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('view_courses') }}"
+            >View Courses</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('student_enroll') }}"
+            >Enrollment</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Records</a>
+        </li>
+        {% if username %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('student_logout') }}">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('student_signup') }}">Sign Up</a>
+        </li>
+        {% endif %}
+      </ul>
+      {% if username %}
+      <div class="d-flex p-3">
+        <span class="navbar-text">Welcome, {{ username }}!</span>
+      </div>
+      {% endif %}
+    </div>
+
     <!-- Main Content -->
     <div class="container mt-4">{% block content %}{% endblock %}</div>
 
     <!-- Footer -->
-    <footer class="text-center text-lg-start mt-4">
-      <div class="text-center p-3 text-white">
-        <strong>&copy;2024 Unity College. All rights reserved.</strong>
+    <footer class="footer mt-4 text-white">
+      <div class="container">
+        <div class="row">
+          <!-- About Section -->
+          <div class="col-md-4">
+            <h5>About Lumina College</h5>
+            <p>
+              Lumina College is committed to providing quality education and
+              fostering a community of learners. Our mission is to enlighten
+              minds and inspire innovation.
+            </p>
+          </div>
+          <!-- Quick Links -->
+          <div class="col-md-4">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="{{ url_for('home') }}" class="footer-link">Home</a>
+              </li>
+              <li>
+                <a href="{{ url_for('view_courses') }}" class="footer-link"
+                  >View Courses</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('student_enroll') }}" class="footer-link"
+                  >Enrollment</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('view_profile') }}" class="footer-link"
+                  >Profile Detail</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Contact and Social Media -->
+          <div class="col-md-4">
+            <h5>Contact Us</h5>
+            <p><i class="fas fa-envelope"></i> info@luminacollege.com</p>
+            <p><i class="fas fa-phone"></i> +1 234 567 890</p>
+            <div class="social-icons">
+              <a href="#" class="footer-link"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="footer-link"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="footer-link"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+              <a href="#" class="footer-link"
+                ><i class="fab fa-instagram"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <hr class="footer-hr" />
+            <p class="text-center">
+              <strong>&copy; 2024 Lumina College. All rights reserved.</strong>
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
 

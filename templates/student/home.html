@@ -3,105 +3,151 @@
 
 <!-- Text Bar (placed outside the container) -->
 <div class="text-bar">
-  <p>Welcome to Unity College - Your future starts here!</p>
+  <p>Welcome to Lumina College - Your future starts here!</p>
 </div>
 
-<div class="container mt-4">
-  <!-- Wrapper for the image slider with extra margin -->
+<!-- Combined Container for About Us and Slider -->
+<div class="combined-container mt-4">
+  <!-- About Us Section -->
+  <div class="about-us">
+    <h4><strong>What is LUMINA College?</strong></h4>
+    <p>
+      "At Lumina College, our goal is to deliver innovative and inclusive
+      education. We aim to empower students with high-quality learning that
+      meets today’s needs, fostering a diverse environment where everyone can
+      reach their full potential."
+    </p>
+    <!-- Enroll Now Button -->
+    <div class="enroll-section">
+      <a href="{{ url_for('student_enroll') }}" class="btn btn-primary"
+        >Enroll Now!</a
+      >
+    </div>
+  </div>
+
+  <!-- Slider Section -->
   <div class="carousel-container">
-    <!-- Image Slider -->
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div
-          id="carouselExampleIndicators"
-          class="carousel slide"
-          data-bs-ride="carousel"
-        >
-          <div class="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="0"
-              class="active"
-              aria-current="true"
-              aria-label="Slide 1"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="1"
-              aria-label="Slide 2"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="2"
-              aria-label="Slide 3"
-            ></button>
-          </div>
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <div class="carousel-img-container">
-                <img
-                  src="../../static/images/theme/school1.jpg"
-                  class="d-block w-100 slider-img"
-                  alt="First slide"
-                />
-                <div
-                  class="carousel-caption d-flex align-items-center justify-content-center"
-                >
-                  <h3 class="text-overlay">Welcome to Unity College</h3>
-                </div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="carousel-img-container">
-                <img
-                  src="../../static/images/theme/school2.jpg"
-                  class="d-block w-100 slider-img"
-                  alt="Second slide"
-                />
-                <div
-                  class="carousel-caption d-flex align-items-center justify-content-center"
-                >
-                  <h3 class="text-overlay">Explore Our Courses</h3>
-                </div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="carousel-img-container">
-                <img
-                  src="../../static/images/theme/school3.jpg"
-                  class="d-block w-100 slider-img"
-                  alt="Third slide"
-                />
-                <div
-                  class="carousel-caption d-flex align-items-center justify-content-center"
-                >
-                  <h3 class="text-overlay">Join Our Community</h3>
-                </div>
-              </div>
+    <div
+      id="carouselExampleIndicators"
+      class="carousel slide"
+      data-bs-ride="carousel"
+    >
+      <div class="carousel-indicators">
+        <button
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide-to="0"
+          class="active"
+          aria-current="true"
+          aria-label="Slide 1"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide-to="1"
+          aria-label="Slide 2"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide-to="2"
+          aria-label="Slide 3"
+        ></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="carousel-img-container">
+            <img
+              src="../../static/images/theme/school1.jpg"
+              class="d-block w-100 slider-img"
+              alt="First slide"
+            />
+            <div class="carousel-caption d-flex align-items-center">
+              <h3 class="text-overlay">Welcome to Lumina College</h3>
             </div>
           </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
         </div>
+        <div class="carousel-item">
+          <div class="carousel-img-container">
+            <img
+              src="../../static/images/theme/school2.jpg"
+              class="d-block w-100 slider-img"
+              alt="Second slide"
+            />
+            <div
+              class="carousel-caption d-flex align-items-center justify-content-center"
+            >
+              <h3 class="text-overlay">Explore Our Courses</h3>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-img-container">
+            <img
+              src="../../static/images/theme/school3.jpg"
+              class="d-block w-100 slider-img"
+              alt="Third slide"
+            />
+            <div
+              class="carousel-caption d-flex align-items-center justify-content-center"
+            >
+              <h3 class="text-overlay">Join Our Community</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Teachers Section -->
+<div class="teachers-section mt-4">
+  <h4 class="teachertext"><strong>Our Teachers</strong></h4>
+  <div class="teachers-list">
+    <div class="teacher-card">
+      <img src="../../static/images/theme/teacher1.jpg" alt="Teacher 1" />
+      <div class="teacher-info">
+        <h5>Dr. John Doe</h5>
+        <p>Professor of Computer Science</p>
+      </div>
+    </div>
+    <div class="teacher-card">
+      <img src="../../static/images/theme/teacher2.jpg" alt="Teacher 2" />
+      <div class="teacher-info">
+        <h5>Dr. Jane Smith</h5>
+        <p>Professor of Mathematics</p>
+      </div>
+    </div>
+    <div class="teacher-card">
+      <img src="../../static/images/theme/teacher3.jpg" alt="Teacher 3" />
+      <div class="teacher-info">
+        <h5>Dr. Emily Johnson</h5>
+        <p>Professor of Physics</p>
+      </div>
+    </div>
+    <div class="teacher-card">
+      <img src="../../static/images/theme/teacher4.jpg" alt="Teacher 4" />
+      <div class="teacher-info">
+        <h5>Dr. Michael Brown</h5>
+        <p>Professor of Chemistry</p>
       </div>
     </div>
   </div>

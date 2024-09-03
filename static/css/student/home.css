@@ -1,8 +1,9 @@
-/* Ensure the body takes up the full height of the viewport */
+/* Base styles for HTML and body */
 html,
 body {
   height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 /* Ensure the main content area expands to fill the space between navbar and footer */
@@ -11,30 +12,47 @@ body {
   flex-direction: column;
 }
 
-.container {
-  flex: 1; /* Makes sure the container takes up the remaining space */
+/* General row styling */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
 }
 
-/* Increase space between the navigation bar and the image slider */
+/* Combined container for About Us and Slider */
+.combined-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between sections */
+}
+
+/* About Us Section Styling */
+.about-us {
+  flex: 1; /* Adjust size to fit on the left side */
+  padding: 20px;
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
+}
+
+/* Slider Container Styling */
 .carousel-container {
-  margin-top: 20px; /* Adjust this value to increase or decrease the space */
-  margin-bottom: 50px;
+  flex: 2; /* Adjust size to fit on the right side */
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
 /* Custom height for slider images */
 .slider-img {
-  height: 400px; /* Adjust this value as needed */
-  object-fit: cover; /* Ensures the image covers the entire area */
-  display: block; /* Ensures image fills the container */
+  height: 400px;
+  object-fit: cover;
+  display: block;
   border-radius: 20px;
 }
 
 /* Container for the image and overlay */
 .carousel-img-container {
-  position: relative; /* Required for positioning the overlay */
+  position: relative;
 }
 
-/* Dimming effect */
+/* Dimming effect for carousel images */
 .carousel-img-container::before {
   content: "";
   position: absolute;
@@ -42,48 +60,141 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  z-index: 1; /* Ensures overlay is on top of the image */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
   border-radius: 20px;
 }
 
-/* Center the text overlay */
+/* Center the text overlay in the carousel */
 .carousel-caption {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  z-index: 2; /* Ensures text is above the overlay */
+  z-index: 2;
 }
 
-/* Style for the animative text bar */
+/* Style for the animated text bar */
 .text-bar {
   position: relative;
-  z-index: 3; /* Ensures the text bar is above the image slider */
-  background-color: #c5e3f6; /* Dark background for visibility */
-  color: black; /* White text color */
-  padding: 20px 10px; /* Increase padding to make the bar taller */
+  z-index: 3;
+  background-color: rgb(163, 230, 163);
+  color: black;
+  padding: 20px 10px;
   overflow: hidden;
-  margin-bottom: 10px; /* Add margin to avoid overlap with the carousel */
-  font-size: 1.5rem; /* Increase font size for better readability */
-  line-height: 40px; /* Match the height to center the text vertically */
-  height: 80px; /* Set a fixed height */
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  line-height: 40px;
+  height: 80px;
   width: 100%;
-  border-radius: 50px;
+  border-radius: 20px;
 }
 
 .text-bar p {
-  position: absolute;
+  margin: 0;
+  font-family: Arial, sans-serif;
   white-space: nowrap;
-  animation: scroll 10s linear infinite;
+  overflow: hidden;
+  display: inline-block;
+  animation: scroll-left 10s linear infinite;
 }
 
-@keyframes scroll {
+@keyframes scroll-left {
   0% {
     transform: translateX(100%);
   }
   100% {
     transform: translateX(-100%);
+  }
+}
+
+/* Teachers Section Styling */
+.teachers-section {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+}
+
+.teachers-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.teacher-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.teacher-card img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.teacher-info h5 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.teacher-info p {
+  margin: 0;
+  color: #6c757d;
+}
+
+/* Enroll Section */
+.enroll-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.enroll-section a {
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.teachertext {
+  margin-bottom: 40px;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .combined-container {
+    flex-direction: column;
+  }
+
+  .about-us,
+  .carousel-container {
+    flex: 1 1 100%;
+  }
+
+  .slider-img {
+    height: 250px;
+  }
+
+  .text-bar {
+    font-size: 1.2rem;
+    padding: 15px 5px;
+    height: 60px;
+    line-height: 30px;
+  }
+
+  .carousel-container {
+    margin-top: 20px;
+  }
+
+  .teachers-list {
+    flex-direction: column;
+  }
+
+  .teacher-card img {
+    width: 120px;
+    height: 120px;
   }
 }

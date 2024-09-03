@@ -7,13 +7,18 @@
     <div class="col-md-4 mb-4">
       <div class="card">
         <img
-          src="{{ url_for('static', filename='images/uploads/' ~ course[1]) }}"
+          src="{{ url_for('static', filename='images/uploads/' ~ course[2]) }}"
           class="card-img-top course-img"
           alt="Course Image"
         />
         <div class="card-body">
-          <h5 class="card-title">{{ course[0] }}</h5>
-          <p class="card-text">{{ course[2] }}</p>
+          <h5 class="card-title">{{ course[1]}}</h5>
+          <p class="card-text">{{ course[3] }}</p>
+          <a
+            href="{{ url_for('course_detail', course_id=course[0]) }}"
+            class="btn btn-primary"
+            >View Details</a
+          >
         </div>
       </div>
     </div>
