@@ -6,9 +6,99 @@
   <p>Welcome to Lumina College - Your future starts here!</p>
 </div>
 
-<!-- Combined Container for About Us and Slider -->
-<div class="combined-container mt-4">
-  <!-- About Us Section -->
+<!-- Slider Section -->
+<div class="carousel-container mt-4">
+  <div
+    id="carouselExampleIndicators"
+    class="carousel slide"
+    data-bs-ride="carousel"
+  >
+    <div class="carousel-indicators">
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="Slide 1"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="1"
+        aria-label="Slide 2"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide-to="2"
+        aria-label="Slide 3"
+      ></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="carousel-img-container">
+          <img
+            src="../../static/images/theme/school1.jpg"
+            class="d-block w-100 slider-img"
+            alt="First slide"
+          />
+          <div class="carousel-caption d-flex align-items-center">
+            <h3 class="text-overlay">Welcome to Lumina College</h3>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img-container">
+          <img
+            src="../../static/images/theme/school2.jpg"
+            class="d-block w-100 slider-img"
+            alt="Second slide"
+          />
+          <div
+            class="carousel-caption d-flex align-items-center justify-content-center"
+          >
+            <h3 class="text-overlay">Explore Our Courses</h3>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img-container">
+          <img
+            src="../../static/images/theme/school3.jpg"
+            class="d-block w-100 slider-img"
+            alt="Third slide"
+          />
+          <div
+            class="carousel-caption d-flex align-items-center justify-content-center"
+          >
+            <h3 class="text-overlay">Join Our Community</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+<!-- About Us and Enroll Now Section -->
+<div class="about-enroll-section mt-4">
   <div class="about-us">
     <h4><strong>What is LUMINA College?</strong></h4>
     <p>
@@ -17,107 +107,14 @@
       meets today’s needs, fostering a diverse environment where everyone can
       reach their full potential."
     </p>
-    <!-- Enroll Now Button -->
-    <div class="enroll-section">
-      <a href="{{ url_for('student_enroll') }}" class="btn btn-primary"
-        >Enroll Now!</a
-      >
-    </div>
   </div>
 
-  <!-- Slider Section -->
-  <div class="carousel-container">
-    <div
-      id="carouselExampleIndicators"
-      class="carousel slide"
-      data-bs-ride="carousel"
+  <div class="enroll-section">
+    <a href="{{ url_for('student_enroll') }}" class="btn btn-primary"
+      >Enroll Now!</a
     >
-      <div class="carousel-indicators">
-        <button
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide-to="0"
-          class="active"
-          aria-current="true"
-          aria-label="Slide 1"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide-to="1"
-          aria-label="Slide 2"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide-to="2"
-          aria-label="Slide 3"
-        ></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="carousel-img-container">
-            <img
-              src="../../static/images/theme/school1.jpg"
-              class="d-block w-100 slider-img"
-              alt="First slide"
-            />
-            <div class="carousel-caption d-flex align-items-center">
-              <h3 class="text-overlay">Welcome to Lumina College</h3>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="carousel-img-container">
-            <img
-              src="../../static/images/theme/school2.jpg"
-              class="d-block w-100 slider-img"
-              alt="Second slide"
-            />
-            <div
-              class="carousel-caption d-flex align-items-center justify-content-center"
-            >
-              <h3 class="text-overlay">Explore Our Courses</h3>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="carousel-img-container">
-            <img
-              src="../../static/images/theme/school3.jpg"
-              class="d-block w-100 slider-img"
-              alt="Third slide"
-            />
-            <div
-              class="carousel-caption d-flex align-items-center justify-content-center"
-            >
-              <h3 class="text-overlay">Join Our Community</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#carouselExampleIndicators"
-        data-bs-slide="prev"
-      >
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#carouselExampleIndicators"
-        data-bs-slide="next"
-      >
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
   </div>
 </div>
-
 <!-- Teachers Section -->
 <div class="teachers-section mt-4">
   <h4 class="teachertext"><strong>Our Teachers</strong></h4>
@@ -152,4 +149,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
