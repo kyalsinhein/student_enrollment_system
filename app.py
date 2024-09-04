@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 import hashlib
 import traceback
-from dbconn import query_db, execute_db
+from dbcontroller import query_db, execute_db
 
 app = Flask(__name__)
 app.secret_key = 'secrete'  # Required for flash messages
