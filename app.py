@@ -9,23 +9,6 @@ from dbcontroller import query_db, execute_db
 
 app = Flask(__name__)
 app.secret_key = 'secrete'  # Required for flash messages
-# Decorators to require login for student and admin
-def login_required_student(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'username' not in session or session.get('user_type') != 'student':
-            return redirect(url_for('student_login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-def login_required_admin(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'username' not in session or session.get('user_type') != 'admin':
-            return redirect(url_for('admin_login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
 
 # Default Route to Choose User Type
 @app.route("/", methods=["GET", "POST"])
@@ -98,19 +81,19 @@ def student_signup():
 
 # Student Home Route
 @app.route("/student/home")
-@login_required_student
 def home():
+    if 'username' not in session or session.get('user_type') != 'student':
+        return redirect(url_for('student_login'))
+    
     username = session.get('username')
     return render_template("student/home.html", username=username)
 
 # View Profile Route
 @app.route("/student/profile")
-@login_required_student
 def view_profile():
-    username = session.get('username')
-
-    if not username:
+    if 'username' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
+    username = session.get('username')
 
     try:
         profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,), one=True)
@@ -126,12 +109,10 @@ def view_profile():
 
 # Edit Profile Route
 @app.route("/student/profile/edit", methods=["GET", "POST"])
-@login_required_student
 def edit_profile():
-    username = session.get('username')
-
-    if not username:
+    if 'username' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
+    username = session.get('username')
 
     if request.method == "POST":
         first_name = request.form.get('fname')
@@ -167,8 +148,9 @@ def edit_profile():
         return render_template("student/edit_profile.html", profile=profile, username=username)
 
 @app.route('/student/courses')
-@login_required_student
 def view_courses():
+    if 'username' not in session or session.get('user_type') != 'student':
+        return redirect(url_for('student_login'))
     username = session.get('username')
     try:
         courses = query_db("SELECT id,name, image, description FROM course")
@@ -178,8 +160,10 @@ def view_courses():
     return render_template('student/courses.html', courses=courses, username=username)
 
 @app.route('/student/courses/detail/<int:course_id>')
-@login_required_student
+
 def course_detail(course_id):
+    if 'username' not in session or session.get('user_type') != 'student':
+        return redirect(url_for('student_login'))
     username = session.get('username')
     try:
         course = query_db("SELECT name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,), one=True)
@@ -194,12 +178,12 @@ def course_detail(course_id):
 
 
 @app.route("/student/enrollment", methods=["GET", "POST"])
-@login_required_student
 def student_enroll():
-    username = session.get('username')
-
-    if not username:
+    
+    if 'username' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
+    
+    username = session.get('username')
 
     if request.method == "POST":
         course_id = request.form.get('course_id')
@@ -300,8 +284,10 @@ def admin_signup():
 
 # Admin Dashboard Route
 @app.route("/admin/dashboard")
-@login_required_admin
+
 def admin_dashboard():
+    if 'username' not in session or session.get('user_type') != 'admin':
+        return redirect(url_for('admin_login'))
     username = session.get('username')
 
     try:
@@ -322,8 +308,10 @@ def admin_dashboard():
     )
 
 @app.route("/admin/courses", methods=["GET"])
-@login_required_admin
 def admin_view_courses():
+    
+    if 'username' not in session or session.get('user_type') != 'admin':
+        return redirect(url_for('admin_login'))
     username = session.get('username')
     courses = query_db("SELECT * FROM course")
     
@@ -342,8 +330,9 @@ def admin_view_courses():
     return render_template("admin/courses.html", courses=courses, username=username)
 
 @app.route("/admin/course/add", methods=["GET", "POST"])
-@login_required_admin
 def add_course():
+    if 'username' not in session or session.get('user_type') != 'admin':
+        return redirect(url_for('admin_login'))
     # Use absolute path
     upload_folder = os.path.abspath(os.path.join('static', 'images', 'uploads'))
     app.config['UPLOAD_FOLDER'] = upload_folder
