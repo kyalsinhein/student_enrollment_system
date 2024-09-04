@@ -4,14 +4,28 @@ import os
 from datetime import datetime
 import hashlib
 import traceback
+from functools import wraps  # Added for custom decorators
 from dbcontroller import query_db, execute_db
 
 app = Flask(__name__)
 app.secret_key = 'secrete'  # Required for flash messages
+# Decorators to require login for student and admin
+def login_required_student(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session or session.get('user_type') != 'student':
+            return redirect(url_for('student_login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
-# Configuration for file uploads
-upload_folder = os.path.join('static', 'images', 'uploads')
-app.config['UPLOAD_FOLDER'] = upload_folder
+def login_required_admin(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session or session.get('user_type') != 'admin':
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 # Default Route to Choose User Type
 @app.route("/", methods=["GET", "POST"])
@@ -39,6 +53,7 @@ def student_login():
 
             if user:
                 session['username'] = user[0]
+                session['user_type'] = 'student' 
                 return redirect(url_for('home'))
             else:
                 flash("Invalid email or password. Please try again.", 'danger')
@@ -83,12 +98,14 @@ def student_signup():
 
 # Student Home Route
 @app.route("/student/home")
+@login_required_student
 def home():
     username = session.get('username')
     return render_template("student/home.html", username=username)
 
 # View Profile Route
 @app.route("/student/profile")
+@login_required_student
 def view_profile():
     username = session.get('username')
 
@@ -109,6 +126,7 @@ def view_profile():
 
 # Edit Profile Route
 @app.route("/student/profile/edit", methods=["GET", "POST"])
+@login_required_student
 def edit_profile():
     username = session.get('username')
 
@@ -149,6 +167,7 @@ def edit_profile():
         return render_template("student/edit_profile.html", profile=profile, username=username)
 
 @app.route('/student/courses')
+@login_required_student
 def view_courses():
     username = session.get('username')
     try:
@@ -159,6 +178,7 @@ def view_courses():
     return render_template('student/courses.html', courses=courses, username=username)
 
 @app.route('/student/courses/detail/<int:course_id>')
+@login_required_student
 def course_detail(course_id):
     username = session.get('username')
     try:
@@ -174,6 +194,7 @@ def course_detail(course_id):
 
 
 @app.route("/student/enrollment", methods=["GET", "POST"])
+@login_required_student
 def student_enroll():
     username = session.get('username')
 
@@ -234,6 +255,7 @@ def admin_login():
 
             if user:
                 session['username'] = user[0]
+                session['user_type'] = 'admin' 
                 return redirect(url_for('admin_dashboard'))
             else:
                 flash("Invalid email or password. Please try again.", 'danger')
@@ -278,6 +300,7 @@ def admin_signup():
 
 # Admin Dashboard Route
 @app.route("/admin/dashboard")
+@login_required_admin
 def admin_dashboard():
     username = session.get('username')
 
@@ -299,6 +322,7 @@ def admin_dashboard():
     )
 
 @app.route("/admin/courses", methods=["GET"])
+@login_required_admin
 def admin_view_courses():
     username = session.get('username')
     courses = query_db("SELECT * FROM course")
@@ -318,7 +342,16 @@ def admin_view_courses():
     return render_template("admin/courses.html", courses=courses, username=username)
 
 @app.route("/admin/course/add", methods=["GET", "POST"])
+@login_required_admin
 def add_course():
+    # Use absolute path
+    upload_folder = os.path.abspath(os.path.join('static', 'images', 'uploads'))
+    app.config['UPLOAD_FOLDER'] = upload_folder
+
+    # Ensure the upload folder exists
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+
     username = session.get('username')
     if request.method == "POST":
         name = request.form['name']
@@ -328,16 +361,22 @@ def add_course():
         cfile = request.files['cimage']
         filename = secure_filename(cfile.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        cfile.save(file_path)
+
+        # Debugging print statements
+        print("Upload folder path:", app.config['UPLOAD_FOLDER'])
+        print("File path:", file_path)
+        print("Directory exists:", os.path.exists(app.config['UPLOAD_FOLDER']))
+
         try:
+            cfile.save(file_path)
             execute_db("INSERT INTO course (name, image, description, credits, lecturer) VALUES (?, ?, ?, ?, ?)",
                        (name, filename, description, credits, lecturer))
-            # flash("Course added successfully.", 'success')  # Flash removed
             return redirect(url_for('admin_view_courses'))
         except Exception as e:
             print(traceback.format_exc())
 
     return render_template("admin/addcourse.html", username=username)
+
 
 @app.route("/admin/courses/delete/<int:id>", methods=["POST"])
 def delete_course(id):
