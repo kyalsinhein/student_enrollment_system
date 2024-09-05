@@ -26,6 +26,10 @@ body {
   color: #ffffff; /* Text color: White */
 }
 
+.container-fluid {
+  background-color: #101820; /* Dark Blue */
+}
+
 .navbar-brand i {
   font-size: 1.5rem; /* Adjust size of the icon */
   vertical-align: middle; /* Align icon vertically with the text */

@@ -1,37 +1,98 @@
-/* styles.css or courses.css */
+/* Course card styling */
 .card {
   display: flex;
   flex-direction: column;
-  height: 400px; /* Adjust height as needed */
-  width: 250px; /* Adjust width as needed */
+  width: 300px; /* Limit the card width to 300px */
+  height: 100%; /* Ensure the card takes full height */
   border: 1px solid #ddd; /* Optional border for visibility */
   border-radius: 8px; /* Optional border-radius for rounded corners */
   overflow: hidden; /* Ensures content stays within card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
 }
 
+.coursetitle {
+  color: white;
+  position: relative;
+}
 .card-img-top {
-  height: 50%; /* Adjust height as needed, smaller relative to card */
-  width: auto; /* Maintain aspect ratio */
-  max-width: 100%; /* Ensure the image does not overflow the card width */
-  object-fit: cover; /* Ensures image covers the area without distortion */
-  margin: 0 auto; /* Center image horizontally */
+  width: 100%; /* Ensure image takes the full width of the card */
+  height: 300px; /* Set a fixed height for the image */
+  object-fit: cover; /* Ensures image maintains aspect ratio and covers the area */
+  object-position: center; /* Centers the image */
 }
 
 .card-body {
-  height: 50%; /* Adjust height as needed, remaining space for content */
+  padding: 1rem; /* Adjust padding as needed */
+  flex-grow: 1; /* Ensures the body grows to fill the remaining space */
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centers content vertically */
-  padding: 1rem; /* Adjust padding as needed */
+  justify-content: space-between; /* Spread content evenly in the card */
+  text-align: center; /* Center text content in the card body */
 }
 
-.btn-primary {
-  background-color: #ff7043; /* Primary button color */
-  color: #ffffff; /* Button text color */
-  border: none; /* Remove border */
-  padding: 0.5rem 1rem; /* Padding for button */
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.btn-primary:hover {
-  background-color: #ff7043;
+.card-text {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem; /* Add some space between text blocks */
+}
+
+/* Add background image to the body with dimmed effect */
+body {
+  position: relative;
+  background: url("/static/images/theme/background.jpg") no-repeat center center
+    fixed;
+  background-size: cover;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dim effect with opacity 0.5 */
+  z-index: 0; /* Ensure the overlay is below the main content */
+  pointer-events: none; /* Allow interaction with content */
+}
+/* Responsive grid layout for courses */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem; /* Adds space between columns for better layout */
+}
+
+.col-md-4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the card within the column */
+  flex: 1 0 30%; /* Ensure three columns in a row, with spacing between */
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Flash messages positioning */
+#flash-messages-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+/* Mobile responsiveness adjustments */
+@media (max-width: 768px) {
+  .col-md-4 {
+    flex: 1 0 100%; /* Stack the cards on smaller screens */
+  }
+
+  .card-img-top {
+    height: 200px; /* Maintain a fixed height on smaller screens */
+  }
 }

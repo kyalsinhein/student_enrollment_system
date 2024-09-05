@@ -1,1 +1,63 @@
-
+{% extends "/admin/layout.html" %} {% block content %}
+<link href="/static/css/admin/editcourse.css" rel="stylesheet" />
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Edit Course</h2>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        name="name"
+        value="{{ course[1] }}"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="cimage" class="form-label">Upload Image</label>
+      <input type="file" class="form-control" id="cimage" name="cimage" />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="description"
+        name="description"
+        rows="3"
+        required
+      >
+{{ course[3] }}</textarea
+      >
+    </div>
+    <div class="mb-3">
+      <label for="credit" class="form-label">Credit</label>
+      <input
+        type="number"
+        class="form-control"
+        id="credit"
+        name="credit"
+        value="{{ course[4] }}"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="lecturer" class="form-label">Lecturer</label>
+      <input
+        type="text"
+        class="form-control"
+        id="lecturer"
+        name="lecturer"
+        value="{{ course[5] }}"
+        required
+      />
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary">Update Course</button>
+      <a href="{{ url_for('admin_view_courses') }}" class="btn btn-secondary">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

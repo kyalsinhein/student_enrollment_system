@@ -6,6 +6,7 @@ import hashlib
 import traceback
 from functools import wraps  # Added for custom decorators
 from dbcontroller import query_db, execute_db
+import time
 
 app = Flask(__name__)
 app.secret_key = 'secrete'  # Required for flash messages
@@ -337,12 +338,12 @@ def admin_dashboard():
 
 @app.route("/admin/courses", methods=["GET"])
 def admin_view_courses():
-    
     if 'username' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
+
     username = session.get('username')
     courses = query_db("SELECT * FROM course")
-    
+
     courses = [
         {
             "id": course[0],
@@ -355,14 +356,15 @@ def admin_view_courses():
         for course in courses
     ]
 
-    return render_template("admin/courses.html", courses=courses, username=username)
+    return render_template("admin/courses.html", courses=courses, username=username, time=time)
+
 
 @app.route("/admin/course/add", methods=["GET", "POST"])
 def add_course():
     if 'username' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
     # Use absolute path
-    upload_folder = os.path.abspath(os.path.join('static', 'images', 'uploads'))
+    upload_folder = os.path.abspath(os.path.join('static', 'images', 'courses'))
     app.config['UPLOAD_FOLDER'] = upload_folder
 
     # Ensure the upload folder exists
@@ -393,6 +395,71 @@ def add_course():
             print(traceback.format_exc())
 
     return render_template("admin/addcourse.html", username=username)
+
+@app.route("/admin/courses/edit/<int:course_id>", methods=["GET", "POST"])
+def edit_course(course_id):
+    if 'username' not in session or session.get('user_type') != 'admin':
+        return redirect(url_for('admin_login'))
+
+    # Fetch the current course details from the database
+    try:
+        course = query_db("SELECT id, name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,), one=True)
+        
+        if not course:
+            flash("Course not found.", 'danger')
+            return redirect(url_for('admin_view_courses'))
+        
+    except Exception as e:
+        print(traceback.format_exc())
+        flash("Error fetching course details.", 'danger')
+        return redirect(url_for('admin_view_courses'))
+
+    # Use absolute path for uploads
+    upload_folder = os.path.abspath(os.path.join('static', 'images', 'courses'))
+    app.config['UPLOAD_FOLDER'] = upload_folder
+
+    # Ensure the upload folder exists
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+
+    # If form is submitted, update the course details
+    if request.method == "POST":
+        name = request.form['name']
+        description = request.form['description']
+        credits = request.form['credit']
+        lecturer = request.form['lecturer']
+        cfile = request.files['cimage']
+        
+        # If a new image is uploaded
+        if cfile and cfile.filename:
+            filename = secure_filename(cfile.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            try:
+                cfile.save(file_path)
+            except Exception as e:
+                print(traceback.format_exc())
+                flash("Error uploading image.", 'danger')
+                return render_template("admin/editcourse.html", course=course)
+        else:
+            # If no new image is uploaded, use the old one
+            filename = course[2]
+
+        try:
+            # Update the course in the database
+            execute_db("""
+                UPDATE course 
+                SET name = ?, image = ?, description = ?, credits = ?, lecturer = ?
+                WHERE id = ?
+            """, (name, filename, description, credits, lecturer, course_id))
+            
+            flash("Course updated successfully!", 'success')
+            return redirect(url_for('admin_view_courses'))
+
+        except Exception as e:
+            print(traceback.format_exc())
+            flash("Error updating course details.", 'danger')
+
+    return render_template("admin/editcourse.html", course=course)
 
 
 @app.route("/admin/courses/delete/<int:id>", methods=["POST"])
