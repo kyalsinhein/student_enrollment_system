@@ -176,7 +176,6 @@ def course_detail(course_id):
         return "An error occurred while fetching course details.", 500
 
 
-
 @app.route("/student/enrollment", methods=["GET", "POST"])
 def student_enroll():
     

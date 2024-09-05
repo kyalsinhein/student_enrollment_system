@@ -22,7 +22,7 @@ body {
 
 /* Navbar Customization */
 .navbar-custom {
-  background-color: #0a203a; /* Dark Blue */
+  background-color: #101820; /* Dark Blue */
   color: #ffffff; /* Text color: White */
 }
 
@@ -45,7 +45,7 @@ body {
   left: -250px; /* Hide sidebar off-screen to the left */
   height: 100%;
   width: 250px; /* Adjust width as needed */
-  background-color: #0a203a; /* Dark Blue */
+  background-color: #101820; /* Dark Blue */
   color: #ffffff; /* Text color: White */
   transition: left 0.3s ease; /* Smooth sliding effect */
   overflow-y: auto; /* Allow scrolling if content overflows */
@@ -102,12 +102,12 @@ body {
   font-family: "Roboto", sans-serif; /* Font for the username */
 }
 
-/* Footer Styling */
 .footer {
-  background-color: #0a203a; /* Dark Blue */
+  background-color: #101820; /* Dark Blue */
   color: #ffffff;
   padding: 40px 0;
   font-family: "Open Sans", sans-serif;
+  box-shadow: none; /* Ensure no shadow is applied */
 }
 
 .footer h5 {
@@ -152,12 +152,12 @@ body {
 
 /* Button Styles */
 .btn-primary {
-  background-color: #ff7043; /* Primary button color: Deep Orange */
+  background-color: #ff4500; /* Primary button color: Deep Orange */
   color: #ffffff; /* Button text color: White */
 }
 
 .btn-primary:hover {
-  background-color: #ff6347; /* Lighter Orange on hover */
+  background-color: black; /* Lighter Orange on hover */
 }
 
 /* General Layout Adjustments */
