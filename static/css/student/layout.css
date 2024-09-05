@@ -26,6 +26,11 @@ body {
   color: #ffffff; /* Text color: White */
 }
 
+.navbar-brand i {
+  font-size: 1.5rem; /* Adjust size of the icon */
+  vertical-align: middle; /* Align icon vertically with the text */
+}
+
 /* Default navbar padding and link styling */
 .navbar-custom .navbar-brand,
 .navbar-custom .nav-link {
@@ -81,9 +86,11 @@ body {
 .btn-close {
   background-color: #ffffff !important;
 }
+
 .navbar-toggler {
   background-color: white;
 }
+
 /* Larger screens: Maintain fixed height */
 @media (min-width: 768px) {
   .navbar-custom {
@@ -102,12 +109,15 @@ body {
   font-family: "Roboto", sans-serif; /* Font for the username */
 }
 
+/* Footer Styling */
 .footer {
   background-color: #101820; /* Dark Blue */
   color: #ffffff;
   padding: 40px 0;
   font-family: "Open Sans", sans-serif;
   box-shadow: none; /* Ensure no shadow is applied */
+  position: relative;
+  z-index: 2; /* Ensure footer is above the dimmed background */
 }
 
 .footer h5 {

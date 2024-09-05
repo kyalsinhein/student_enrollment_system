@@ -32,10 +32,11 @@ def student_login():
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
-            user = query_db("SELECT first_name FROM student WHERE email = ? AND password = ?", (email, hashed_password), one=True)
+            user = query_db("SELECT id,first_name FROM student WHERE email = ? AND password = ?", (email, hashed_password), one=True)
 
             if user:
-                session['username'] = user[0]
+                session['uid'] = user[0]
+                session['username'] = user[1]
                 session['user_type'] = 'student' 
                 return redirect(url_for('home'))
             else:
@@ -219,6 +220,33 @@ def student_enroll():
 
     return render_template("student/enroll.html", full_name=full_name, courses=courses, username=username)
 
+@app.route('/student/records')
+def view_enrollment_records():
+    if 'username' not in session or session.get('user_type') != 'student':
+        return redirect(url_for('student_login'))
+
+    student_id = session.get('uid')  # Get student ID from session
+
+    if not student_id:
+        return redirect(url_for('home'))
+
+    try:
+        # Query to get enrollment records along with course names
+        enrollments = query_db("""
+            SELECT e.student_id, s.first_name, c.name AS course_name, e.enroll_date
+            FROM enrollment e
+            JOIN student s ON e.student_id = s.id
+            JOIN course c ON e.course_id = c.id
+            WHERE e.student_id = ?
+        """, (student_id,))
+        
+    except Exception as e:
+        print(traceback.format_exc())
+        enrollments = []
+
+    return render_template('student/records.html', enrollments=enrollments, username=session.get('username'))
+
+
 # Student Logout Route
 @app.route("/student/logout")
 def student_logout():
@@ -234,10 +262,11 @@ def admin_login():
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
-            user = query_db("SELECT first_name FROM admin WHERE email = ? AND password = ?", (email, hashed_password), one=True)
+            user = query_db("SELECT id,first_name FROM admin WHERE email = ? AND password = ?", (email, hashed_password), one=True)
 
             if user:
-                session['username'] = user[0]
+                session['adminuid'] = user[0]
+                session['username'] = user[1]
                 session['user_type'] = 'admin' 
                 return redirect(url_for('admin_dashboard'))
             else:

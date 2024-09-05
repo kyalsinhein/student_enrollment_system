@@ -1,0 +1,58 @@
+{% extends "/student/layout.html" %} {% block content %}
+
+<title>Enrollment Records</title>
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  table,
+  th,
+  td {
+    border: 1px solid #ddd;
+  }
+  th,
+  td {
+    padding: 12px;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  a {
+    text-decoration: none;
+  }
+</style>
+<h1>Enrollment Records</h1>
+<table>
+  <thead>
+    <tr>
+      <th>User ID</th>
+      <th>Username</th>
+      <th>Course Name</th>
+      <th>Enroll Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if enrollments %} {% for enrollment in enrollments %}
+    <tr>
+      <td>{{ enrollment[0] }}</td>
+      <td>{{ enrollment[1] }}</td>
+      <td>{{ enrollment[2] }}</td>
+      <td>{{ enrollment[3]}}</td>
+    </tr>
+    {% endfor %} {% else %}
+    <tr>
+      <td colspan="4">No enrollment records found.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+
+<a href="{{ url_for('home') }}">Back to Home</a>
+
+{% endblock %}
