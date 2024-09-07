@@ -1,0 +1,65 @@
+{% extends "/admin/layout.html" %} {% block content %}
+<link href="/static/css/admin/addstudent.css" rel="stylesheet" />
+<div class="container mt-4">
+  <form method="POST" action="/admin/student/add">
+    <h2 class="form-title mb-4">Add Student</h2>
+    <div class="mb-3">
+      <label for="first_name" class="form-label">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="first_name"
+        name="first_name"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="last_name" class="form-label">Last Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="last_name"
+        name="last_name"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone</label>
+      <input type="tel" class="form-control" id="phone" name="phone" required />
+    </div>
+    <div class="mb-3">
+      <label for="address" class="form-label">Address</label>
+      <textarea
+        class="form-control"
+        id="address"
+        name="address"
+        rows="3"
+        required
+      ></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        required
+      />
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary">Done</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

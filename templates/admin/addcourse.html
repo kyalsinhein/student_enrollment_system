@@ -1,8 +1,8 @@
 {% extends "/admin/layout.html" %} {% block content %}
 <link href="/static/css/admin/addcourse.css" rel="stylesheet" />
 <div class="container mt-4">
-  <h2 class="text-center mb-4">Add Course</h2>
   <form method="post" action="/admin/course/add" enctype="multipart/form-data">
+    <h2 class="form-title mb-4">Add Course</h2>
     <div class="mb-3">
       <label for="name" class="form-label">Name</label>
       <input type="text" class="form-control" id="name" name="name" />
@@ -29,7 +29,7 @@
       <input type="text" class="form-control" id="lecturer" name="lecturer" />
     </div>
     <div class="text-center">
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">Done</button>
     </div>
   </form>
 </div>

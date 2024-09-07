@@ -23,7 +23,7 @@
               <i class="fas fa-chevron-right toggle-icon"></i>
               <i class="fas fa-chevron-left toggle-icon d-none"></i>
             </button>
-            <h4 class="text-center mt-3">Lumina College</h4>
+            <h4 class="text-center mt-3">Unity College</h4>
             <ul class="nav flex-column">
               <li class="nav-item">
                 <a
@@ -33,7 +33,9 @@
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Student Management</a>
+                <a class="nav-link" href="{{ url_for('admin_view_students') }}"
+                  >Student Management</a
+                >
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('admin_view_courses') }}"
@@ -41,7 +43,9 @@
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Enrollment</a>
+                <a class="nav-link" href="{{url_for('admin_view_enrollment')}}"
+                  >Enrollment Management</a
+                >
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Schedule Management</a>

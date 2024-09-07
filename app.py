@@ -344,8 +344,9 @@ def admin_view_courses():
     username = session.get('username')
     courses = query_db("SELECT * FROM course")
 
-    courses = [
-        {
+    courses_list = []
+    for course in courses:
+        course_dict = {
             "id": course[0],
             "name": course[1],
             "image": course[2],
@@ -353,10 +354,10 @@ def admin_view_courses():
             "credits": course[4],
             "lecturer": course[5],
         }
-        for course in courses
-    ]
+        courses_list.append(course_dict)
 
-    return render_template("admin/courses.html", courses=courses, username=username, time=time)
+    return render_template("admin/courses.html", courses=courses_list, username=username, time=time)
+
 
 
 @app.route("/admin/course/add", methods=["GET", "POST"])
@@ -480,6 +481,145 @@ def delete_course(id):
 
     return redirect(url_for('admin_view_courses'))
 
+@app.route("/admin/students", methods=["GET"])
+def admin_view_students():
+    if 'username' not in session or session.get('user_type') != 'admin':
+        return redirect(url_for('admin_login'))
+
+    username = session.get('username')
+    students = query_db("SELECT * FROM student")
+
+    students_list = []
+    for student in students:
+        student_dict = {
+            "id": student[0],
+            "fname": student[1],
+            "lname": student[2],
+            "email": student[3],
+            "phone": student[4],
+            "address": student[5],
+        }
+        students_list.append(student_dict)
+
+    return render_template("admin/students.html", students=students_list, username=username, time=time)
+
+
+
+@app.route("/admin/student/add", methods=["GET", "POST"])
+def add_student():
+    if 'username' not in session or session.get('user_type') != 'admin':
+        return redirect(url_for('admin_login'))
+
+    username = session.get('username')
+    if request.method == "POST":
+        fname = request.form['first_name']
+        lname = request.form['last_name']
+        email = request.form['email']
+        phone = request.form['phone']
+        address = request.form['address']
+        password = request.form['password']
+
+        try:
+            execute_db("INSERT INTO student (first_name, last_name, email, phone, address, password) VALUES (?, ?, ?, ?, ?,?)",
+                       (fname, lname, email, phone, address, password))
+            return redirect(url_for('admin_view_students'))
+        except Exception as e:
+            print(traceback.format_exc())
+
+    return render_template("admin/addstudent.html", username=username)
+
+@app.route("/admin/students/edit/<int:student_id>", methods=["GET", "POST"])
+def edit_student(student_id):
+    if 'username' not in session or session.get('user_type') != 'admin':
+        return redirect(url_for('admin_login'))
+
+    # Fetch the current course details from the database
+    try:
+        student = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE id = ?", (student_id,), one=True)
+        
+        if not student:
+            flash("Student not found.", 'danger')
+            return redirect(url_for('admin_view_students'))
+        
+    except Exception as e:
+        print(traceback.format_exc())
+        flash("Error fetching course details.", 'danger')
+        return redirect(url_for('admin_view_students'))
+
+
+    # If form is submitted, update the course details
+    if request.method == "POST":
+        fname = request.form['first_name']
+        lname = request.form['last_name']
+        email = request.form['email']
+        phone = request.form['phone']
+        address = request.form['address']
+        
+
+        try:
+            # Update the course in the database
+            execute_db("""
+                UPDATE student 
+                SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?
+                WHERE id = ?
+            """, (fname, lname, email, phone, address))
+            
+            flash("Student updated successfully!", 'success')
+            return redirect(url_for('admin_view_courses'))
+
+        except Exception as e:
+            print(traceback.format_exc())
+            flash("Error updating course details.", 'danger')
+
+    return render_template("admin/editstudent.html", student=student)
+
+
+@app.route("/admin/students/delete/<int:id>", methods=["POST"])
+def delete_student(id):
+    try:
+
+            execute_db("DELETE FROM student WHERE id = ?", (id,))
+            flash("Student deleted successfully.", 'success')
+
+    except Exception as e:
+        print(traceback.format_exc())
+        flash("An error occurred while trying to delete the student. Please try again.", 'danger')
+
+    return redirect(url_for('admin_view_students'))
+
+@app.route("/admin/enrollmentmgt", methods=["GET"])
+def admin_view_enrollment():
+    if 'username' not in session or session.get('user_type') != 'admin':
+        return redirect(url_for('admin_login'))
+
+    username = session.get('username')
+    enrollment = query_db("SELECT * FROM enrollment")
+
+    enrollment_list = []
+    
+    for record in enrollment:
+        enrollment_dict = {
+            "id": record[0],
+            "student_id": record[1],
+            "course_id": record[2],
+            "enroll_date": record[3],
+        }
+        
+        enrollment_list.append(enrollment_dict)
+
+    return render_template("admin/enrollmentmgmt.html", enrollment_list=enrollment_list, username=username, time=time)
+
+@app.route("/admin/enrollment/delete/<int:id>", methods=["POST"])
+def delete_enrollment(id):
+    try:
+            execute_db("DELETE FROM enrollment WHERE id = ?", (id,))
+            flash("Enrollment deleted successfully.", 'success')
+
+    except Exception as e:
+        print(traceback.format_exc())
+        flash("An error occurred while trying to delete the course. Please try again.", 'danger')
+
+    return redirect(url_for('admin_view_enrollment'))
 
 # Admin Logout Route
 @app.route("/admin/logout")
