@@ -1,5 +1,4 @@
-{% extends "/student/layout.html" %} {% block content %}
-<!-- Registration 13 - Bootstrap Brain Component -->
+{% extends "/admin/layout.html" %} {% block content %}
 <section class="py-3 py-md-5">
   <div class="container">
     <div class="row justify-content-center">
@@ -12,41 +11,26 @@
             <h2 class="fs-6 fw-normal text-center text-secondary mb-4">
               Enroll Your Course
             </h2>
-
-            <!-- Flash Messages Section -->
-            {% with messages = get_flashed_messages(with_categories=true) %} {%
-            if messages %}
-            <div class="mb-3">
-              {% for category, message in messages %}
-              <div
-                class="alert alert-{{ category }} alert-dismissible fade show"
-                role="alert"
-              >
-                {{ message }}
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="alert"
-                  aria-label="Close"
-                ></button>
-              </div>
-              {% endfor %}
-            </div>
-            {% endif %} {% endwith %}
-
-            <!-- Enrollment Form -->
-            <form action="{{ url_for('student_enroll') }}" method="POST">
+            <form action="{{ url_for('admin_enroll') }}" method="POST">
               <div class="row gy-2 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      value="{{ full_name }}"
-                      readonly
-                      placeholder="Name"
-                    />
-                    <label for="name" class="form-label">Name</label>
+                    <select
+                      class="form-select"
+                      name="student_id"
+                      id="student_id"
+                      required
+                    >
+                      <option value="" disabled selected>Select Student</option>
+                      {% for student in students %}
+                      <option value="{{ student[0] }}">
+                        {{ student[1] }} {{ student[2] }}
+                      </option>
+                      {% endfor %}
+                    </select>
+                    <label for="student_id" class="form-label"
+                      >Student Name</label
+                    >
                   </div>
                 </div>
                 <div class="col-12">
@@ -65,7 +49,6 @@
                     <label for="course_id" class="form-label">Course</label>
                   </div>
                 </div>
-
                 <div class="col-12">
                   <div class="d-grid my-3">
                     <button class="btn btn-primary btn-lg" type="submit">

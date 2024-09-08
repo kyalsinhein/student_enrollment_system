@@ -1,0 +1,33 @@
+/* form.css */
+.container {
+  max-width: 600px; /* Max width of the form container */
+}
+
+form {
+  padding: 1rem;
+  background-color: #ffffff; /* Background color for the form */
+  border-radius: 0.375rem; /* Rounded corners */
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1); /* Light shadow for better visibility */
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-title {
+  font-size: 1.5rem; /* Font size of the form title */
+  font-weight: 700; /* Bold text */
+  color: #333; /* Title color */
+  text-align: left; /* Align the title to the left */
+  margin-bottom: 1rem; /* Add margin below the title */
+}
+
+textarea.form-control {
+  resize: vertical; /* Allow vertical resizing of the textarea */
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 0 1rem; /* Add padding on smaller screens */
+  }
+}

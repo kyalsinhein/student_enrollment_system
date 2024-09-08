@@ -10,10 +10,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
 }
 
-.coursetitle {
-  color: white;
-  position: relative;
-}
 .card-img-top {
   width: 100%; /* Ensure image takes the full width of the card */
   height: 300px; /* Set a fixed height for the image */
@@ -41,25 +37,6 @@
   margin-bottom: 0.5rem; /* Add some space between text blocks */
 }
 
-/* Add background image to the body with dimmed effect */
-body {
-  position: relative;
-  background: url("/static/images/theme/background.jpg") no-repeat center center
-    fixed;
-  background-size: cover;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Dim effect with opacity 0.5 */
-  z-index: 0; /* Ensure the overlay is below the main content */
-  pointer-events: none; /* Allow interaction with content */
-}
 /* Responsive grid layout for courses */
 .row {
   display: flex;
@@ -86,6 +63,53 @@ body::before {
   z-index: 9999;
 }
 
+/* Add background image to the body with dimmed effect */
+body {
+  position: relative;
+  background: url("/static/images/theme/background.jpg") no-repeat center center
+    fixed;
+  background-size: cover;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dim effect with opacity 0.5 */
+  z-index: 0; /* Ensure the overlay is below the main content */
+  pointer-events: none; /* Allow interaction with content */
+}
+
+/* Flash messages */
+.flash-message {
+  color: white;
+  font-size: 1rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: rgba(
+    0,
+    128,
+    0,
+    0.7
+  ); /* Green background with some transparency */
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* Centered section titles */
+.coursetitle {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center; /* Center the titles */
+  font-weight: bold;
+  z-index: 1; /* Ensure the title is above the dim effect */
+  position: relative; /* Needed to apply z-index */
+}
+
 /* Mobile responsiveness adjustments */
 @media (max-width: 768px) {
   .col-md-4 {
@@ -95,4 +119,26 @@ body::before {
   .card-img-top {
     height: 200px; /* Maintain a fixed height on smaller screens */
   }
+}
+
+/* Add these styles to your CSS file */
+
+.search-form {
+  width: 100%; /* Full width of its container */
+  max-width: 500px; /* Maximum width */
+  margin: 0 auto; /* Center align */
+}
+
+.search-form .input-group {
+  display: flex;
+  gap: 10px; /* Space between input and button */
+}
+
+.search-form .form-control {
+  flex: 1; /* Allow input to take up remaining space */
+  border-radius: 20px 0 0 20px; /* Rounded corners for the input */
+}
+
+.search-form .btn {
+  border-radius: 0 20px 20px 0; /* Rounded corners for the button */
 }
