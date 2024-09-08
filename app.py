@@ -188,19 +188,18 @@ def course_detail(course_id):
         return "An error occurred while fetching course details.", 500
 
 
-
 @app.route("/student/enrollment", methods=["GET", "POST"])
 def student_enroll():
-    
     if 'username' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
-    
+
     username = session.get('username')
 
     if request.method == "POST":
         course_id = request.form.get('course_id')
         
         if not course_id:
+            flash("Please select a course.", "warning")
             return redirect(url_for('student_enroll'))
 
         try:
@@ -216,11 +215,40 @@ def student_enroll():
             """, (student_id, course_id), one=True)
 
             if existing_enrollment:
-                # If the student is already enrolled in the course, redirect or show an error
                 flash("You are already enrolled in this course.", "warning")
                 return redirect(url_for('student_enroll'))
 
-            # If not enrolled, proceed with the enrollment
+            # Fetch the schedule of the course the student is trying to enroll in
+            new_course_schedule = query_db("""
+                SELECT day_of_week FROM schedule WHERE course_id = ?
+            """, (course_id,), one=True)
+
+            if not new_course_schedule:
+                flash("Course schedule not found.", "danger")
+                return redirect(url_for('student_enroll'))
+
+            # Split the days of the new course into a list
+            new_days = new_course_schedule[0].split(', ')
+
+            # Fetch the schedule of courses the student is already enrolled in
+            existing_schedule = query_db("""
+                SELECT sc.day_of_week
+                FROM schedule sc
+                JOIN enrollment e ON sc.course_id = e.course_id
+                WHERE e.student_id = ?
+            """, (student_id,))
+
+            # Split the days of the existing courses into a list
+            for existing_schedule_entry in existing_schedule:
+                existing_days = existing_schedule_entry[0].split(', ')
+                
+                # Check for any overlapping days
+                for day in new_days:
+                    if day in existing_days:
+                        flash(f"You cannot enrolled this course! You have another class in these days!", "danger")
+                        return redirect(url_for('student_enroll'))
+
+            # If no conflict, proceed with enrollment
             execute_db("""
                 INSERT INTO enrollment (student_id, course_id, enroll_date) 
                 VALUES (?, ?, ?)
@@ -269,12 +297,28 @@ def view_enrollment_records():
             JOIN course c ON e.course_id = c.id
             WHERE e.student_id = ?
         """, (student_id,))
+
+        # Query to get the timetable of the current student's enrolled subjects
+        timetable = query_db("""
+            SELECT sc.course_id, c.name AS course_name, sc.day_of_week, sc.start_time, sc.end_time
+            FROM schedule sc
+            JOIN course c ON sc.course_id = c.id
+            WHERE sc.course_id IN (
+                SELECT e.course_id FROM enrollment e WHERE e.student_id = ?
+            )
+            ORDER BY sc.day_of_week, sc.start_time
+        """, (student_id,))
         
     except Exception as e:
         print(traceback.format_exc())
         enrollments = []
+        timetable = []
 
-    return render_template('student/records.html', enrollments=enrollments, username=session.get('username'))
+    return render_template('student/records.html', 
+                           enrollments=enrollments, 
+                           timetable=timetable, 
+                           username=session.get('username'))
+
 
 
 # Student Logout Route
