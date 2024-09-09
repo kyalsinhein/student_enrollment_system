@@ -1,22 +1,18 @@
 import sqlite3
-from contextlib import closing
-
-DATABASE = 'advweb.db'
-
-def get_db_connection():
-    return sqlite3.connect(DATABASE)
 
 def query_db(query, args=(), one=False):
-    con = get_db_connection()
-    with closing(con.cursor()) as cur:
-        cur.execute(query, args)
-        rv = cur.fetchall()
-        if one:
-            return rv[0] if rv else None
-        return rv
+    con = sqlite3.connect('advweb.db')
+    cur = con.cursor()
+    cur.execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    con.close()
+    return (rv[0] if rv else None) if one else rv
 
 def execute_db(query, args=()):
-    con = get_db_connection()
-    with closing(con.cursor()) as cur:
-        cur.execute(query, args)
-        con.commit()
+    con = sqlite3.connect('advweb.db')
+    cur = con.cursor()
+    cur.execute(query, args)
+    con.commit()
+    cur.close()
+    con.close()
