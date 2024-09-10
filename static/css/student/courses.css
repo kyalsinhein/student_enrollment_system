@@ -23,7 +23,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between; /* Spread content evenly in the card */
-  text-align: center; /* Center text content in the card body */
 }
 
 .card-title {
@@ -45,9 +44,6 @@
 }
 
 .col-md-4 {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center the card within the column */
   flex: 1 0 30%; /* Ensure three columns in a row, with spacing between */
 }
 
@@ -123,6 +119,7 @@ body::before {
 
 /* Add these styles to your CSS file */
 
+/* Search form styling */
 .search-form {
   width: 100%; /* Full width of its container */
   max-width: 500px; /* Maximum width */
