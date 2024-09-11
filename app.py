@@ -433,7 +433,18 @@ def admin_view_courses():
         return redirect(url_for('admin_login'))
 
     username = session.get('username')
-    courses = query_db("SELECT * FROM course")
+    page = int(request.args.get('page', 1))  # Get current page from query parameter, default to 1
+    per_page = 6  # Number of courses per page
+
+    # Get total count of courses
+    total_courses = query_db("SELECT COUNT(*) FROM course")[0][0]
+
+    # Calculate pagination values
+    offset = (page - 1) * per_page
+    total_pages = (total_courses + per_page - 1) // per_page  # Ceiling division to get total pages
+
+    # Retrieve courses for the current page
+    courses = query_db("SELECT * FROM course LIMIT ? OFFSET ?", (per_page, offset))
 
     courses_list = []
     for course in courses:
@@ -447,7 +458,8 @@ def admin_view_courses():
         }
         courses_list.append(course_dict)
 
-    return render_template("admin/courses.html", courses=courses_list, username=username, time=time)
+    return render_template("admin/courses.html", courses=courses_list, username=username, time=time, page=page, total_pages=total_pages)
+
 
 
 
@@ -578,8 +590,25 @@ def admin_view_students():
         return redirect(url_for('admin_login'))
 
     username = session.get('username')
-    students = query_db("SELECT * FROM student")
-
+    
+    # Get page number from query parameters, default to 1 if not present
+    page = int(request.args.get('page', 1))
+    per_page = 10  # Number of rows per page
+    
+    # Query the total number of students
+    total_students_query = "SELECT COUNT(*) FROM student"
+    total_students = query_db(total_students_query)[0][0]
+    
+    # Calculate offset for the query
+    offset = (page - 1) * per_page
+    
+    # Query the students for the current page
+    students_query = f"""
+        SELECT * FROM student
+        LIMIT {per_page} OFFSET {offset}
+    """
+    students = query_db(students_query)
+    
     students_list = []
     for student in students:
         student_dict = {
@@ -592,7 +621,19 @@ def admin_view_students():
         }
         students_list.append(student_dict)
 
-    return render_template("admin/students.html", students=students_list, username=username, time=time)
+    # Calculate total pages
+    total_pages = (total_students + per_page - 1) // per_page
+    
+    return render_template(
+        "admin/students.html", 
+        students=students_list, 
+        username=username, 
+        time=time,
+        current_page=page,
+        total_pages=total_pages
+    )
+
+
 
 @app.route("/admin/student/add", methods=["GET", "POST"])
 def add_student():
