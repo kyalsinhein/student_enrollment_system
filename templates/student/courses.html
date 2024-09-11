@@ -30,10 +30,11 @@
       <div class="col-md-4 mb-4 course-item">
         <div class="card">
           <img
-            src="{{ url_for('static', filename='images/courses/' ~ course[2]) }}"
+            src="{{ url_for('static', filename='images/courses/' + course[2]) }}"
             class="card-img-top course-img"
             alt="Course Image"
           />
+
           <div class="card-body">
             <h5 class="card-title">{{ course[1] }}</h5>
             <p class="card-text">{{ course[3] }}</p>
