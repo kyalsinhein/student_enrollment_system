@@ -397,7 +397,12 @@ def admin_dashboard():
         total_courses = query_db("SELECT COUNT(*) FROM course", one=True)[0]
         total_enrollments = query_db("SELECT COUNT(*) FROM enrollment", one=True)[0]
 
-        # Fetch enrolled students' data
+        # Pagination setup
+        page = request.args.get('page', 1, type=int)
+        per_page = 10
+        offset = (page - 1) * per_page
+
+        # Fetch enrolled students' data with pagination
         enrolled_students = query_db("""
             SELECT 
                 student.id AS student_id, 
@@ -407,15 +412,23 @@ def admin_dashboard():
             FROM enrollment 
             JOIN student ON enrollment.student_id = student.id
             JOIN course ON enrollment.course_id = course.id
-        """)
+            LIMIT ? OFFSET ?
+        """, (per_page, offset))
 
-        # Print the data to debug
-        print("Enrolled students:", enrolled_students)
+        # Count total number of enrolled students for pagination
+        total_enrolled_students = query_db("""
+            SELECT COUNT(*) 
+            FROM enrollment 
+            JOIN student ON enrollment.student_id = student.id
+            JOIN course ON enrollment.course_id = course.id
+        """, one=True)[0]
+        total_pages = (total_enrolled_students + per_page - 1) // per_page
 
     except Exception as e:
         print(traceback.format_exc())
         total_students = total_courses = total_enrollments = 0
         enrolled_students = []
+        total_pages = 0
 
     return render_template(
         "admin/dashboard.html", 
@@ -423,7 +436,9 @@ def admin_dashboard():
         total_students=total_students, 
         total_courses=total_courses, 
         total_enrollments=total_enrollments, 
-        enrolled_students=enrolled_students  # Pass the enrolled students data
+        enrolled_students=enrolled_students,  # Pass the enrolled students data
+        current_page=page,
+        total_pages=total_pages
     )
 
     
@@ -485,10 +500,6 @@ def add_course():
         filename = secure_filename(cfile.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-        # Debugging print statements
-        print("Upload folder path:", app.config['UPLOAD_FOLDER'])
-        print("File path:", file_path)
-        print("Directory exists:", os.path.exists(app.config['UPLOAD_FOLDER']))
 
         try:
             cfile.save(file_path)
