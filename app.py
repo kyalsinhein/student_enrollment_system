@@ -506,6 +506,7 @@ def add_course():
             execute_db("INSERT INTO course (name, image, description, credits, lecturer) VALUES (?, ?, ?, ?, ?)",
                        (name, filename, description, credits, lecturer))
             return redirect(url_for('admin_view_courses'))
+
         except Exception as e:
             print(traceback.format_exc())
 
