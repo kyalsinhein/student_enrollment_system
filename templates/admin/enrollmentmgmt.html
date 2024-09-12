@@ -25,6 +25,7 @@
     {% endfor %} {% endif %} {% endwith %}
   </div>
 
+  <!-- Enrollment Table -->
   <div class="table-responsive">
     <table class="table table-striped">
       <thead>
@@ -63,6 +64,50 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination Controls (on the left) -->
+  <div class="d-flex justify-content-start">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <!-- Previous Page Button -->
+        <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+          <a
+            class="page-link"
+            href="{{ url_for('admin_view_enrollment', page=current_page-1) }}"
+            aria-label="Previous"
+          >
+            <span aria-hidden="true">&laquo;</span> Previous
+          </a>
+        </li>
+
+        <!-- Page Numbers -->
+        {% for page_num in range(1, total_pages + 1) %}
+        <li
+          class="page-item {% if page_num == current_page %}active{% endif %}"
+        >
+          <a
+            class="page-link"
+            href="{{ url_for('admin_view_enrollment', page=page_num) }}"
+            >{{ page_num }}</a
+          >
+        </li>
+        {% endfor %}
+
+        <!-- Next Page Button -->
+        <li
+          class="page-item {% if current_page == total_pages %}disabled{% endif %}"
+        >
+          <a
+            class="page-link"
+            href="{{ url_for('admin_view_enrollment', page=current_page+1) }}"
+            aria-label="Next"
+          >
+            Next <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </div>
 
 <!-- Include jQuery and Bootstrap JavaScript -->
@@ -71,11 +116,9 @@
 
 <script>
   $(document).ready(function () {
-    // Display flash messages
-    $("#flash-messages-container .alert").alert();
-    // Automatically hide the alert after 5 seconds
+    // Flash message auto-close
     setTimeout(function () {
-      $("#flash-messages-container .alert").alert("close");
+      $(".alert").alert("close");
     }, 5000);
   });
 </script>

@@ -725,21 +725,39 @@ def admin_view_schedules():
     if 'username' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
 
-    username = session.get('username')
-    schedules = query_db("SELECT * FROM schedule")
+    # Pagination parameters
+    per_page = 10
+    page = request.args.get('page', 1, type=int)
 
-    schedules_list = []
-    for schedule in schedules:
-        schedule_dict = {
+    # Fetch all schedules
+    schedules = query_db("SELECT * FROM schedule")
+    
+    # Total number of pages
+    total_schedules = len(schedules)
+    total_pages = (total_schedules + per_page - 1) // per_page  # Calculate total pages
+
+    # Paginate the schedules
+    start = (page - 1) * per_page
+    end = start + per_page
+    schedules_list = [
+        {
             "id": schedule[0],
             "course_id": schedule[1],
             "day_of_week": schedule[2],
             "start_time": schedule[3],
             "end_time": schedule[4]
         }
-        schedules_list.append(schedule_dict)
+        for schedule in schedules[start:end]
+    ]
 
-    return render_template("admin/schedules.html", schedules=schedules_list, username=username)
+    return render_template(
+        "admin/schedules.html", 
+        schedules=schedules_list, 
+        username=session.get('username'), 
+        current_page=page, 
+        total_pages=total_pages
+    )
+
 
 
 @app.route("/admin/schedule/add", methods=["GET", "POST"])
@@ -828,10 +846,21 @@ def admin_view_enrollment():
         return redirect(url_for('admin_login'))
 
     username = session.get('username')
-    enrollment = query_db("SELECT * FROM enrollment")
-
-    enrollment_list = []
     
+    # Get the page number from query parameters, default to 1
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of enrollments per page
+
+    # Query to get total number of enrollments
+    total_enrollment = query_db("SELECT COUNT(*) FROM enrollment")[0][0]
+
+    # Fetch enrollment data for the current page with a LIMIT and OFFSET
+    offset = (page - 1) * per_page
+    enrollment_query = f"SELECT * FROM enrollment LIMIT {per_page} OFFSET {offset}"
+    enrollment = query_db(enrollment_query)
+
+    # Convert enrollment data into a list of dictionaries
+    enrollment_list = []
     for record in enrollment:
         enrollment_dict = {
             "id": record[0],
@@ -839,10 +868,20 @@ def admin_view_enrollment():
             "course_id": record[2],
             "enroll_date": record[3],
         }
-        
         enrollment_list.append(enrollment_dict)
 
-    return render_template("admin/enrollmentmgmt.html", enrollment_list=enrollment_list, username=username, time=time)
+    # Calculate total pages
+    total_pages = (total_enrollment + per_page - 1) // per_page
+
+    return render_template(
+        "admin/enrollmentmgmt.html", 
+        enrollment_list=enrollment_list, 
+        username=username, 
+        current_page=page, 
+        total_pages=total_pages, 
+        per_page=per_page
+    )
+
 
 
 @app.route("/admin/enrollment", methods=["GET", "POST"])
