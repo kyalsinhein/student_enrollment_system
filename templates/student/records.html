@@ -1,6 +1,6 @@
 {% extends "/student/layout.html" %} {% block content %}
 
-<title>Student Timetable</title>
+<title>Student Records</title>
 <style>
   table {
     width: 100%;
@@ -56,27 +56,34 @@
   </tbody>
 </table>
 
-<h1>Enrollment Records</h1>
+<h1>Records</h1>
 <table>
   <thead>
     <tr>
-      <th>User ID</th>
-      <th>Username</th>
+      <th>Student ID</th>
+      <th>Student Name</th>
+      <th>Course ID</th>
       <th>Course Name</th>
-      <th>Enroll Date</th>
+      <th>Enrolled Date</th>
     </tr>
   </thead>
   <tbody>
     {% if enrollments %} {% for enrollment in enrollments %}
     <tr>
       <td>{{ enrollment[0] }}</td>
+      <!-- student_id -->
       <td>{{ enrollment[1] }}</td>
+      <!-- full_name -->
       <td>{{ enrollment[2] }}</td>
+      <!-- course_id -->
       <td>{{ enrollment[3] }}</td>
+      <!-- course_name -->
+      <td>{{ enrollment[4] }}</td>
+      <!-- enroll_date -->
     </tr>
     {% endfor %} {% else %}
     <tr>
-      <td colspan="4">No enrollment records found.</td>
+      <td colspan="5">No enrollment records found.</td>
     </tr>
     {% endif %}
   </tbody>

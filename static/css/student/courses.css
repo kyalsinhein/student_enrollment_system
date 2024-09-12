@@ -17,6 +17,14 @@
   object-position: center; /* Centers the image */
 }
 
+.course-item {
+  margin-top: 3rem;
+}
+
+.pagination {
+  margin-top: 5rem;
+}
+
 .card-body {
   padding: 1rem; /* Adjust padding as needed */
   flex-grow: 1; /* Ensures the body grows to fill the remaining space */
@@ -116,8 +124,6 @@ body::before {
     height: 200px; /* Maintain a fixed height on smaller screens */
   }
 }
-
-/* Add these styles to your CSS file */
 
 /* Search form styling */
 .search-form {

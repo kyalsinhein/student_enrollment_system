@@ -16,7 +16,6 @@
   max-width: 200px; /* Adjust width as needed */
 }
 
-/* Additional styles for table headers if needed */
 .table th {
   word-wrap: break-word; /* Ensure headers also wrap if necessary */
   max-width: 200px; /* Adjust width as needed */

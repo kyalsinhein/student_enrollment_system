@@ -109,11 +109,11 @@ def view_profile():
         
     return render_template("student/profile.html", profile=profile, username=username)
 
-# Edit Profile Route
 @app.route("/student/profile/edit", methods=["GET", "POST"])
 def edit_profile():
     if 'username' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
+
     username = session.get('username')
 
     if request.method == "POST":
@@ -122,14 +122,27 @@ def edit_profile():
         phone = request.form.get('phone')
         email = request.form.get('email')
         address = request.form.get('address')
+        password = request.form.get('password')
 
-        try:
-            execute_db("""
+        # Handle password hashing if provided
+        if password:
+            hashed_password = hashlib.md5(password.encode()).hexdigest()
+            query = """
+                UPDATE student 
+                SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, password = ?
+                WHERE first_name = ?
+            """
+            args = (first_name, last_name, email, phone, address, hashed_password, username)
+        else:
+            query = """
                 UPDATE student 
                 SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?
                 WHERE first_name = ?
-            """, (first_name, last_name, email, phone, address, username))
+            """
+            args = (first_name, last_name, email, phone, address, username)
 
+        try:
+            execute_db(query, args)
             session['username'] = first_name  # Update session with the new name if changed
             return redirect(url_for('view_profile'))
 
@@ -289,9 +302,13 @@ def view_enrollment_records():
         return redirect(url_for('home'))
 
     try:
-        # Query to get enrollment records along with course names
+        # Query to get enrollment records along with course names and course_id
         enrollments = query_db("""
-            SELECT e.student_id, s.first_name, c.name AS course_name, e.enroll_date
+            SELECT e.student_id, 
+                   s.first_name || ' ' || s.last_name AS full_name, 
+                   c.id AS course_id,
+                   c.name AS course_name, 
+                   e.enroll_date
             FROM enrollment e
             JOIN student s ON e.student_id = s.id
             JOIN course c ON e.course_id = c.id
@@ -308,7 +325,7 @@ def view_enrollment_records():
             )
             ORDER BY sc.day_of_week, sc.start_time
         """, (student_id,))
-        
+
     except Exception as e:
         print(traceback.format_exc())
         enrollments = []
