@@ -1,20 +1,43 @@
-/* Course card styling */
+/* Body and Background */
+body {
+  background-color: aliceblue; /* Set background color to white */
+  color: #333; /* Set a default text color for better contrast on white */
+  font-family: Arial, sans-serif; /* Optional font change */
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove the dim effect from the overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent; /* No background overlay */
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Course Card Styling */
 .card {
   display: flex;
   flex-direction: column;
-  width: 300px; /* Limit the card width to 300px */
-  height: 100%; /* Ensure the card takes full height */
-  border: 1px solid #ddd; /* Optional border for visibility */
-  border-radius: 8px; /* Optional border-radius for rounded corners */
-  overflow: hidden; /* Ensures content stays within card */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+  width: 300px; /* Card width */
+  height: 100%;
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #fff; /* Ensure cards are white */
 }
 
 .card-img-top {
-  width: 100%; /* Ensure image takes the full width of the card */
-  height: 300px; /* Set a fixed height for the image */
-  object-fit: cover; /* Ensures image maintains aspect ratio and covers the area */
-  object-position: center; /* Centers the image */
+  width: 100%;
+  height: 300px;
+  object-fit: cover; /* Maintain image aspect ratio */
+  object-position: center;
 }
 
 .course-item {
@@ -26,40 +49,42 @@
 }
 
 .card-body {
-  padding: 1rem; /* Adjust padding as needed */
-  flex-grow: 1; /* Ensures the body grows to fill the remaining space */
+  padding: 1rem;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Spread content evenly in the card */
+  justify-content: space-between;
 }
 
 .card-title {
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 10px;
+  color: #333; /* Set dark text color */
 }
 
 .card-text {
   font-size: 0.9rem;
-  margin-bottom: 0.5rem; /* Add some space between text blocks */
+  margin-bottom: 0.5rem;
+  color: #555; /* Slightly lighter text for the description */
 }
 
-/* Responsive grid layout for courses */
+/* Responsive Grid Layout for Courses */
 .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem; /* Adds space between columns for better layout */
+  gap: 1.5rem; /* Spacing between cards */
 }
 
 .col-md-4 {
-  flex: 1 0 30%; /* Ensure three columns in a row, with spacing between */
+  flex: 1 0 30%; /* Three columns in a row */
 }
 
 .mb-4 {
   margin-bottom: 1.5rem !important;
 }
 
-/* Flash messages positioning */
+/* Flash Messages */
 #flash-messages-container {
   position: fixed;
   top: 20px;
@@ -67,69 +92,41 @@
   z-index: 9999;
 }
 
-/* Add background image to the body with dimmed effect */
-body {
-  position: relative;
-  background: url("/static/images/theme/background.jpg") no-repeat center center
-    fixed;
-  background-size: cover;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Dim effect with opacity 0.5 */
-  z-index: 0; /* Ensure the overlay is below the main content */
-  pointer-events: none; /* Allow interaction with content */
-}
-
-/* Flash messages */
 .flash-message {
   color: white;
   font-size: 1rem;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  background-color: rgba(
-    0,
-    128,
-    0,
-    0.7
-  ); /* Green background with some transparency */
+  background-color: rgba(0, 128, 0, 0.7); /* Green background */
   border-radius: 5px;
   text-align: center;
 }
 
-/* Centered section titles */
+/* Course Title */
 .coursetitle {
-  color: white;
+  color: #333; /* Dark text color for visibility on white */
   font-size: 2rem;
   margin-bottom: 20px;
-  text-align: center; /* Center the titles */
+  text-align: center;
   font-weight: bold;
-  z-index: 1; /* Ensure the title is above the dim effect */
-  position: relative; /* Needed to apply z-index */
 }
 
-/* Mobile responsiveness adjustments */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .col-md-4 {
     flex: 1 0 100%; /* Stack the cards on smaller screens */
   }
 
   .card-img-top {
-    height: 200px; /* Maintain a fixed height on smaller screens */
+    height: 200px; /* Adjust image height for smaller screens */
   }
 }
 
-/* Search form styling */
+/* Search Form Styling */
 .search-form {
-  width: 100%; /* Full width of its container */
-  max-width: 500px; /* Maximum width */
-  margin: 0 auto; /* Center align */
+  width: 100%;
+  max-width: 500px; /* Center the search form */
+  margin: 0 auto;
 }
 
 .search-form .input-group {
@@ -138,7 +135,7 @@ body::before {
 }
 
 .search-form .form-control {
-  flex: 1; /* Allow input to take up remaining space */
+  flex: 1;
   border-radius: 20px 0 0 20px; /* Rounded corners for the input */
 }
 
