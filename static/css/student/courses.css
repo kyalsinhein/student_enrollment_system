@@ -111,17 +111,6 @@ body::before {
   font-weight: bold;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .col-md-4 {
-    flex: 1 0 100%; /* Stack the cards on smaller screens */
-  }
-
-  .card-img-top {
-    height: 200px; /* Adjust image height for smaller screens */
-  }
-}
-
 /* Search Form Styling */
 .search-form {
   width: 100%;
@@ -141,4 +130,15 @@ body::before {
 
 .search-form .btn {
   border-radius: 0 20px 20px 0; /* Rounded corners for the button */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .col-md-4 {
+    flex: 1 0 100%; /* Stack the cards on smaller screens */
+  }
+
+  .card-img-top {
+    height: 200px; /* Adjust image height for smaller screens */
+  }
 }
