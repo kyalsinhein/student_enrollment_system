@@ -1,3 +1,6 @@
+/* Importing Roboto Font */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+
 /* General Styles */
 body,
 html {
@@ -5,15 +8,20 @@ html {
   margin: 0;
 }
 
-.register-photo {
+body {
+  background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%);
+  font-family: "Roboto", sans-serif; /* Apply Roboto font */
+}
+
+.login-photo {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh; /* Ensure the container covers the full viewport height */
-  background: #f1f7fc;
+  background: transparent; /* No background color */
 }
 
-.register-photo .container {
+.login-photo .container {
   display: flex;
   width: 90%;
   max-width: 900px; /* Set a maximum width for the container */
@@ -21,40 +29,47 @@ html {
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 
-.register-photo .image-holder,
-.register-photo .form-container {
+.login-photo .image-holder,
+.login-photo .form-container {
   flex: 1;
 }
 
-.register-photo .image-holder {
+.login-photo .image-holder {
   background: url(/static/images/theme/Login.jpg) no-repeat center center;
   background-size: cover;
 }
 
-.register-photo .form-container {
+.login-photo .form-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff;
+  backdrop-filter: blur(20px); /* Increased blur effect */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Slight white overlay for contrast */
   padding: 40px;
 }
 
 /* Form Styles */
-.register-photo form {
+.login-photo form {
   width: 100%;
-  max-width: 400px; /* Ensures form doesn't exceed this width */
-  color: #505e6c;
+  max-width: 240px; /* Ensures form doesn't exceed this width */
+  color: black;
 }
 
 /* Header Styles */
-.register-photo form h2 {
+.login-photo form h2 {
   font-size: 24px;
   line-height: 1.5;
   margin-bottom: 30px;
+  color: white;
 }
 
 /* Input Styles */
-.register-photo form .form-control {
+.login-photo form .form-control {
   background: #f7f9fc;
   border: none;
   border-bottom: 1px solid #dfe7f1;
@@ -67,7 +82,7 @@ html {
 }
 
 /* Button Styles */
-.register-photo form .btn-primary {
+.login-photo form .btn-primary {
   background: black;
   color: white;
   border: none;
@@ -79,31 +94,58 @@ html {
   outline: none !important;
 }
 
-.register-photo form .btn-primary:hover,
-.register-photo form .btn-primary:active {
-  background: grey;
+.login-photo form .btn-primary:hover,
+.login-photo form .btn-primary:active {
+  background: white;
   color: black;
 }
 
-.register-photo form .btn-primary:active {
+.login-photo form .btn-primary:active {
   transform: translateY(1px);
 }
 
 /* Sign Up Link Styles */
-.register-photo form .already {
+.login-photo form .already {
   display: block;
   text-align: center;
   font-size: 14px;
-  color: #6f7a85;
+  color: white;
   opacity: 0.9;
   margin-top: 20px;
 }
 
-.register-photo form .already a {
+.login-photo form .already a {
   color: #000;
   text-decoration: none;
 }
 
-.register-photo form .already a:hover {
-  text-decoration: underline;
+/* Custom Styles for Flask Messages */
+.alert {
+  background-color: red; /* Red background color for the alert */
+  color: white; /* White text color for better contrast */
+  border-color: red; /* Red border color */
+}
+
+.alert.alert-success {
+  background-color: #d4edda; /* Light green background for success messages */
+  color: #155724; /* Dark green text color for success messages */
+  border-color: #c3e6cb; /* Light green border color for success messages */
+}
+
+.alert.alert-info {
+  background-color: #d1ecf1; /* Light blue background for info messages */
+  color: #0c5460; /* Dark blue text color for info messages */
+  border-color: #bee5eb; /* Light blue border color for info messages */
+}
+
+.alert.alert-warning {
+  background-color: #fff3cd; /* Light yellow background for warning messages */
+  color: #856404; /* Dark yellow text color for warning messages */
+  border-color: #ffeeba; /* Light yellow border color for warning messages */
+}
+
+.alert.alert-danger {
+  background-color: red; /* Red background color for danger messages */
+  color: white; /* White text color for danger messages */
+  border-color: red; /* Red border color for danger messages */
 }

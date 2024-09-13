@@ -5,21 +5,24 @@ html {
   margin: 0;
 }
 
+body {
+  background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%);
+}
+
 .register-photo {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh; /* Ensure the container covers the full viewport height */
-  background: #f1f7fc;
 }
 
 .register-photo .container {
   display: flex;
   width: 90%;
   max-width: 900px; /* Set a maximum width for the container */
-  height: 500px; /* Adjust height as needed */
+  height: 600px; /* Increase height for the container */
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background-color: transparent; /* No background color for the container */
   overflow: hidden;
 }
 
@@ -27,6 +30,7 @@ html {
   flex: 1;
   background: url(/static/images/theme/SignUp.jpg) no-repeat center center;
   background-size: cover;
+  height: 100%; /* Ensure the image holder takes full height of the container */
 }
 
 .register-photo .form-container {
@@ -34,13 +38,22 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Slight white overlay for contrast */
+  backdrop-filter: blur(20px); /* Simple blur effect */
   padding: 40px;
+  height: 100%; /* Ensure the form container takes full height of the container */
 }
 
+/* Form Styles */
 .register-photo form {
   width: 100%;
   max-width: 400px; /* Ensures form doesn't exceed this width */
-  color: #505e6c;
+  color: black; /* White text for better contrast */
 }
 
 /* Header Styles */
@@ -48,6 +61,7 @@ html {
   font-size: 24px;
   line-height: 1.5;
   margin-bottom: 30px;
+  color: #ffffff;
 }
 
 /* Input Styles */
@@ -78,7 +92,7 @@ html {
 
 .register-photo form .btn-primary:hover,
 .register-photo form .btn-primary:active {
-  background: grey;
+  background-color: white;
   color: black;
 }
 
@@ -88,15 +102,21 @@ html {
 
 /* Footer Styles */
 .signupfooter {
-  margin-top: 10px;
+  margin-top: 20px; /* Added margin to separate from form content */
   font-size: 0.9rem;
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Center align items */
   width: 100%;
+}
+
+.signupfooter .text {
+  color: #fff; /* White color for the text */
 }
 
 .signupfooter a {
   text-decoration: none;
+  color: #000; /* Black color for the link */
+  margin-left: 10px; /* Adjust this value to move the link to the right */
 }
 
 @media (max-width: 991px) {
