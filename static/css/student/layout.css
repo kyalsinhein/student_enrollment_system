@@ -176,7 +176,8 @@ body {
 
 /* General Layout Adjustments */
 body {
-  background-color: #f0f8ff; /* Light background */
+  background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%) no-repeat center
+    center fixed;
 }
 
 .nav-item .active {

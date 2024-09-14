@@ -1,33 +1,6 @@
 {% extends "/student/layout.html" %} {% block content %}
-
+<link rel="stylesheet" href="/static/css/student/record.css" />
 <title>Student Records</title>
-<style>
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-  }
-  table,
-  th,
-  td {
-    border: 1px solid #ddd;
-  }
-  th,
-  td {
-    padding: 12px;
-    text-align: left;
-  }
-  th {
-    background-color: #f2f2f2;
-  }
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  a {
-    text-decoration: none;
-  }
-</style>
-
 <h1>Timetable</h1>
 <table>
   <thead>
@@ -88,7 +61,5 @@
     {% endif %}
   </tbody>
 </table>
-
-<a href="{{ url_for('home') }}">Back to Home</a>
 
 {% endblock %}

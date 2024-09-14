@@ -1,6 +1,5 @@
 /* Body and Background */
 body {
-  background-color: aliceblue; /* Set background color to white */
   color: #333; /* Set a default text color for better contrast on white */
   font-family: Arial, sans-serif; /* Optional font change */
   margin: 0;
@@ -104,7 +103,7 @@ body::before {
 
 /* Course Title */
 .coursetitle {
-  color: #333; /* Dark text color for visibility on white */
+  color: white;
   font-size: 2rem;
   margin-bottom: 20px;
   text-align: center;

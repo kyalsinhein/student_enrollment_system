@@ -14,7 +14,6 @@ body {
 
 /* Add background image to the body with dimmed effect */
 body {
-  position: relative;
   background: url("/static/images/theme/background.jpg") no-repeat center center
     fixed;
   background-size: cover;

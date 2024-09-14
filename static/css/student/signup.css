@@ -7,100 +7,85 @@ html {
 
 body {
   background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%);
+  font-family: "Roboto", sans-serif;
 }
 
-.register-photo {
+/* Login Container Styles */
+.login-photo {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Ensure the container covers the full viewport height */
+  min-height: 100vh;
 }
 
-.register-photo .container {
+.login-photo .container {
   display: flex;
+  flex-wrap: wrap;
   width: 90%;
-  max-width: 900px; /* Set a maximum width for the container */
-  height: 600px; /* Increase height for the container */
+  max-width: 900px;
+  height: 600px; /* Ensure container is tall enough */
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-  background-color: transparent; /* No background color for the container */
+  background-color: transparent;
   overflow: hidden;
 }
 
-.register-photo .image-holder {
+/* Image and Form Containers */
+.image-holder {
   flex: 1;
   background: url(/static/images/theme/SignUp.jpg) no-repeat center center;
   background-size: cover;
-  height: 100%; /* Ensure the image holder takes full height of the container */
+  min-height: 100%; /* Ensure image holder takes full height of the container */
 }
 
-.register-photo .form-container {
+.form-container {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.1
-  ); /* Slight white overlay for contrast */
-  backdrop-filter: blur(20px); /* Simple blur effect */
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
   padding: 40px;
-  height: 100%; /* Ensure the form container takes full height of the container */
+  height: 86.7%;
 }
 
-/* Form Styles */
-.register-photo form {
+/* Form Styling */
+form {
   width: 100%;
   max-width: 400px; /* Ensures form doesn't exceed this width */
-  color: black; /* White text for better contrast */
+  color: white;
 }
 
-/* Header Styles */
-.register-photo form h2 {
+form h2 {
   font-size: 24px;
   line-height: 1.5;
   margin-bottom: 30px;
-  color: #ffffff;
+  text-align: center;
 }
 
-/* Input Styles */
-.register-photo form .form-control {
+.form-control {
   background: #f7f9fc;
   border: none;
   border-bottom: 1px solid #dfe7f1;
-  border-radius: 0;
   box-shadow: none;
   outline: none;
-  color: inherit;
   text-indent: 6px;
+  width: 100%;
   height: 40px;
 }
 
-/* Button Styles */
-.register-photo form .btn-primary {
+.btn-primary {
   background: black;
   color: white;
   border: none;
-  border-radius: 4px;
   padding: 11px;
-  box-shadow: none;
-  margin-top: 35px;
-  text-shadow: none;
-  outline: none !important;
+  margin-top: 15px;
 }
 
-.register-photo form .btn-primary:hover,
-.register-photo form .btn-primary:active {
-  background-color: white;
+.btn-primary:hover {
+  background: white;
   color: black;
 }
 
-.register-photo form .btn-primary:active {
-  transform: translateY(1px);
-}
-
-/* Footer Styles */
 .signupfooter {
   margin-top: 20px; /* Added margin to separate from form content */
   font-size: 0.9rem;
@@ -115,26 +100,27 @@ body {
 
 .signupfooter a {
   text-decoration: none;
-  color: #000; /* Black color for the link */
+  color: rgb(0, 183, 255);
   margin-left: 10px; /* Adjust this value to move the link to the right */
 }
 
-@media (max-width: 991px) {
-  .register-photo form {
-    padding: 40px;
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .image-holder {
+    display: none; /* Hide image on small screens */
+  }
+
+  .form-container {
+    padding: 20px;
   }
 }
 
-.register-photo form .form-check {
-  font-size: 13px;
-  line-height: 20px;
-}
-
-.register-photo form .already {
-  display: block;
-  text-align: center;
-  font-size: 12px;
-  color: #6f7a85;
-  opacity: 0.9;
-  text-decoration: none;
+@media (min-width: 768px) {
+  .image-holder {
+    display: block; /* Show image on medium and large screens */
+  }
 }
