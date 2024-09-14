@@ -2,7 +2,11 @@
 .card {
   border: 1px solid #dee2e6;
   border-radius: 0.375rem;
-  background-color: black;
+  background-color: white;
+  color: black;
+}
+
+.dashboardtitle {
   color: white;
 }
 
@@ -21,6 +25,10 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
+}
+
+.tabletitle {
+  color: white;
 }
 
 table,

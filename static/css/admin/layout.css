@@ -1,10 +1,12 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
+  background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%) no-repeat center
+    center fixed;
 }
 
 #sidebar.custom-sidebar {
-  background-color: #000000;
+  background: black;
   color: #ffffff;
   height: 100vh;
   padding-top: 1rem;
@@ -28,7 +30,7 @@ body {
 }
 
 #sidebar.custom-sidebar .nav-link:hover {
-  background-color: #444444;
+  color: rgb(52, 105, 197);
 }
 
 #sidebarToggle {
