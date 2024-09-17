@@ -287,7 +287,7 @@ def student_enroll():
         print(f"Exception during GET request: {e}")
         courses = []
 
-    return render_template("student/enroll.html", courses=courses, fullname=fullname)
+    return render_template("student/enroll.html", courses=courses, fullname=fullname,username=username)
 
 
 
