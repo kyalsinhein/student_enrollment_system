@@ -33,9 +33,11 @@ def student_login():
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
-            user = query_db("SELECT id,first_name FROM student WHERE email = ? AND password = ?", (email, hashed_password), one=True)
+            # Query the database for the student with the given email and password
+            user = query_db("SELECT id, first_name FROM student WHERE email = ? AND password = ?", (email, hashed_password))
 
-            if user:
+            if user:  # Check if a matching user is found
+                user = user[0]  # Get the first result from the query
                 session['uid'] = user[0]
                 session['username'] = user[1]
                 session['user_type'] = 'student' 
@@ -48,6 +50,7 @@ def student_login():
             flash("An error occurred during login. Please try again.", 'danger')
 
     return render_template("student/login.html", title="Student Login")
+
 
 # Student Signup Route
 @app.route("/student/signup", methods=["GET", "POST"])
@@ -98,10 +101,13 @@ def view_profile():
     username = session.get('username')
 
     try:
-        profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,), one=True)
+        # Query the database for the student's profile information
+        profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,))
 
-        if not profile:
+        if not profile:  # If no profile is found, redirect to home
             return redirect(url_for('home'))
+
+        profile = profile[0]  # Get the first result from the query
 
     except Exception as e:
         print(traceback.format_exc())
@@ -151,16 +157,19 @@ def edit_profile():
 
     else:
         try:
-            profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,), one=True)
+            profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,))
 
             if not profile:
                 return redirect(url_for('home'))
+
+            profile = profile[0]  # Get the first result from the query
 
         except Exception as e:
             print(traceback.format_exc())
             profile = {}
 
         return render_template("student/edit_profile.html", profile=profile, username=username)
+
 
 @app.route('/student/courses')
 def view_courses():
@@ -190,9 +199,13 @@ def course_detail(course_id):
     if 'username' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
     username = session.get('username')
+    
     try:
-        course = query_db("SELECT name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,), one=True)
+        # Query the course details
+        course = query_db("SELECT name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,))
+
         if course:
+            course = course[0]  # Get the first result from the query
             return render_template('student/course_detail.html', course=course, username=username)
         else:
             return "Course not found", 404
@@ -206,44 +219,45 @@ def student_enroll():
     if 'username' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
 
+    # Fetch the full name of the student
     username = session.get('username')
+
+    try:
+        student = query_db("SELECT first_name, last_name FROM student WHERE first_name = ?", (username,))
+        if not student:
+            return redirect(url_for('student_enroll'))
+        fullname = f"{student[0][0]} {student[0][1]}"
+
+    except Exception as e:
+        print(traceback.format_exc())
+        flash("An error occurred while fetching student details.", "danger")
+        fullname = "Unknown"
 
     if request.method == "POST":
         course_id = request.form.get('course_id')
-        
+
         if not course_id:
             flash("Please select a course.", "warning")
             return redirect(url_for('student_enroll'))
 
         try:
-            # Fetch the student ID based on the username
-            student_id_row = query_db("SELECT id FROM student WHERE first_name = ?", (username,), one=True)
-            if not student_id_row:
-                return redirect(url_for('student_enroll'))
-            student_id = student_id_row[0]
+            # Fetch the student ID
+            student_id = query_db("SELECT id FROM student WHERE first_name = ?", (username,))[0][0]
 
-            # Check if the student is already enrolled in the selected course
-            existing_enrollment = query_db("""
-                SELECT * FROM enrollment WHERE student_id = ? AND course_id = ?
-            """, (student_id, course_id), one=True)
-
-            if existing_enrollment:
-                flash("You are already enrolled in this course.", "warning")
+            # Check if already enrolled
+            enrollment = query_db("SELECT 1 FROM enrollment WHERE student_id = ? AND course_id = ?", (student_id, course_id))
+            if enrollment:
+                flash("You are already enrolled in this course!", "warning")
                 return redirect(url_for('student_enroll'))
 
-            # Fetch the schedule of the course the student is trying to enroll in
-            new_course_schedule = query_db("""
-                SELECT day_of_week FROM schedule WHERE course_id = ?
-            """, (course_id,), one=True)
-
-            if not new_course_schedule:
+            # Check for schedule conflicts
+            new_schedule = query_db("SELECT day_of_week FROM schedule WHERE course_id = ?", (course_id,))
+            if not new_schedule:
                 flash("Course schedule not found.", "danger")
                 return redirect(url_for('student_enroll'))
 
-            # Split the days of the new course into a list
-            new_days = new_course_schedule[0].split(', ')
+            new_days = set(new_schedule[0][0].split(', '))
 
-            # Fetch the schedule of courses the student is already enrolled in
             existing_schedule = query_db("""
                 SELECT sc.day_of_week
                 FROM schedule sc
@@ -251,22 +265,14 @@ def student_enroll():
                 WHERE e.student_id = ?
             """, (student_id,))
 
-            # Split the days of the existing courses into a list
-            for existing_schedule_entry in existing_schedule:
-                existing_days = existing_schedule_entry[0].split(', ')
-                
-                # Check for any overlapping days
-                for day in new_days:
-                    if day in existing_days:
-                        flash(f"You cannot enrolled this course! You have another class in these days!", "danger")
-                        return redirect(url_for('student_enroll'))
+            for schedule in existing_schedule:
+                if new_days.intersection(set(schedule[0].split(', '))):
+                    flash("You cannot enrolled this course! You have another class in these days!", "danger")
+                    return redirect(url_for('student_enroll'))
 
-            # If no conflict, proceed with enrollment
-            execute_db("""
-                INSERT INTO enrollment (student_id, course_id, enroll_date) 
-                VALUES (?, ?, ?)
-            """, (student_id, course_id, datetime.now().strftime('%Y-%m-%d')))
-
+            # Enroll the student
+            execute_db("INSERT INTO enrollment (student_id, course_id, enroll_date) VALUES (?, ?, ?)", 
+                       (student_id, course_id, datetime.now().strftime('%Y-%m-%d')))
             flash("Enrollment successful!", "success")
             return redirect(url_for('home'))
 
@@ -276,19 +282,15 @@ def student_enroll():
             return redirect(url_for('student_enroll'))
 
     try:
-        # Fetch student details
-        student = query_db("SELECT first_name, last_name FROM student WHERE first_name = ?", (username,), one=True)
-        full_name = f"{student[0]} {student[1]}" if student else "N/A"
-
         # Fetch available courses
         courses = query_db("SELECT id, name FROM course")
-
     except Exception as e:
         print(f"Exception during GET request: {e}")
-        full_name = "N/A"
         courses = []
 
-    return render_template("student/enroll.html", full_name=full_name, courses=courses, username=username)
+    return render_template("student/enroll.html", courses=courses, fullname=fullname,username=username)
+
+
 
 
 @app.route('/student/records')
@@ -305,7 +307,7 @@ def view_enrollment_records():
         # Query to get enrollment records along with course names and course_id
         enrollments = query_db("""
             SELECT e.student_id, 
-                   s.first_name || ' ' || s.last_name AS full_name, 
+                   s.first_name || ' ' || s.last_name AS fullname, 
                    c.id AS course_id,
                    c.name AS course_name, 
                    e.enroll_date
@@ -353,12 +355,14 @@ def admin_login():
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
-            user = query_db("SELECT id,first_name FROM admin WHERE email = ? AND password = ?", (email, hashed_password), one=True)
+            # Query the admin user based on the provided email and hashed password
+            user = query_db("SELECT id, first_name FROM admin WHERE email = ? AND password = ?", (email, hashed_password))
 
             if user:
+                user = user[0]  # Fetch the first result
                 session['adminuid'] = user[0]
                 session['username'] = user[1]
-                session['user_type'] = 'admin' 
+                session['user_type'] = 'admin'
                 return redirect(url_for('admin_dashboard'))
             else:
                 flash("Invalid email or password. Please try again.", 'danger')
@@ -368,6 +372,7 @@ def admin_login():
             flash("An error occurred during login. Please try again.", 'danger')
 
     return render_template("admin/login.html", title="Admin Login")
+
 
 # Admin Signup Route (if needed)
 @app.route("/admin/signup", methods=["GET", "POST"])
@@ -410,9 +415,9 @@ def admin_dashboard():
 
     try:
         # Fetch the total counts
-        total_students = query_db("SELECT COUNT(*) FROM student", one=True)[0]
-        total_courses = query_db("SELECT COUNT(*) FROM course", one=True)[0]
-        total_enrollments = query_db("SELECT COUNT(*) FROM enrollment", one=True)[0]
+        total_students = query_db("SELECT COUNT(*) FROM student")[0][0]
+        total_courses = query_db("SELECT COUNT(*) FROM course")[0][0]
+        total_enrollments = query_db("SELECT COUNT(*) FROM enrollment")[0][0]
 
         # Pagination setup
         page = request.args.get('page', 1, type=int)
@@ -438,7 +443,7 @@ def admin_dashboard():
             FROM enrollment 
             JOIN student ON enrollment.student_id = student.id
             JOIN course ON enrollment.course_id = course.id
-        """, one=True)[0]
+        """)[0][0]
         total_pages = (total_enrolled_students + per_page - 1) // per_page
 
     except Exception as e:
@@ -457,8 +462,7 @@ def admin_dashboard():
         current_page=page,
         total_pages=total_pages
     )
-
-    
+   
 @app.route("/admin/courses", methods=["GET"])
 def admin_view_courses():
     if 'username' not in session or session.get('user_type') != 'admin':
@@ -536,11 +540,13 @@ def edit_course(course_id):
 
     # Fetch the current course details from the database
     try:
-        course = query_db("SELECT id, name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,), one=True)
+        course = query_db("SELECT id, name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,))
         
         if not course:
             flash("Course not found.", 'danger')
             return redirect(url_for('admin_view_courses'))
+        
+        course = course[0]  # Get the first result from the list
         
     except Exception as e:
         print(traceback.format_exc())
@@ -599,9 +605,9 @@ def edit_course(course_id):
 def delete_course(id):
     try:
         # Check if the course is enrolled
-        enrollment_count = query_db("SELECT COUNT(*) FROM enrollment WHERE course_id = ?", (id,), one=True)[0]
+        enrollment_count = query_db("SELECT COUNT(*) FROM enrollment WHERE course_id = ?", (id,))
         
-        if enrollment_count > 0:
+        if enrollment_count and enrollment_count[0][0] > 0:
             flash("Cannot delete the course as it is currently enrolled in.", 'danger')
         else:
             execute_db("DELETE FROM course WHERE id = ?", (id,))
@@ -612,6 +618,7 @@ def delete_course(id):
         flash("An error occurred while trying to delete the course. Please try again.", 'danger')
 
     return redirect(url_for('admin_view_courses'))
+
 
 @app.route("/admin/students", methods=["GET"])
 def admin_view_students():
@@ -698,11 +705,13 @@ def edit_student(student_id):
 
     # Fetch the current student details from the database
     try:
-        student = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE id = ?", (student_id,), one=True)
+        student = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE id = ?", (student_id,))
         
         if not student:
             flash("Student not found.", 'danger')
             return redirect(url_for('admin_view_students'))
+        
+        student = student[0]  # Get the first result from the list
         
     except Exception as e:
         print(traceback.format_exc())
@@ -733,8 +742,6 @@ def edit_student(student_id):
             flash("Error updating student details.", 'danger')
 
     return render_template("admin/editstudent.html", student=student)
-
-
 
 @app.route("/admin/students/delete/<int:id>", methods=["POST"])
 def delete_student(id):
@@ -836,26 +843,19 @@ def edit_schedule(schedule_id):
             flash("Error updating schedule.", 'danger')
 
     try:
-        schedule = query_db("SELECT course_id, day_of_week, start_time, end_time FROM schedule WHERE id = ?", (schedule_id,), one=True)
+        schedule = query_db("SELECT course_id, day_of_week, start_time, end_time FROM schedule WHERE id = ?", (schedule_id,))
         if not schedule:
             flash("Schedule not found.", 'danger')
             return redirect(url_for('admin_view_schedules'))
 
-        # Ensure times are in 24-hour format
-        schedule = (
-            schedule[0],  # course_id
-            schedule[1],  # day_of_week
-            schedule[2],  # start_time
-            schedule[3]   # end_time
-        )
+        # Extract the first result from the list
+        schedule = schedule[0]
     except Exception as e:
         print(traceback.format_exc())
         flash("Error fetching schedule details.", 'danger')
         return redirect(url_for('admin_view_schedules'))
 
     return render_template("admin/editschedule.html", schedule=schedule)
-
-
 
 @app.route("/admin/schedules/delete/<int:id>", methods=["POST"])
 def delete_schedule(id):
