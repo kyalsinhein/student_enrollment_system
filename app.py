@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 import hashlib
 import traceback
-from functools import wraps  # Added for custom decorators
 from dbcontroller import query_db, execute_db
 import time
 
@@ -288,7 +287,7 @@ def student_enroll():
         print(f"Exception during GET request: {e}")
         courses = []
 
-    return render_template("student/enroll.html", courses=courses, fullname=fullname,username=username)
+    return render_template("student/enroll.html", courses=courses, fullname=fullname)
 
 
 
