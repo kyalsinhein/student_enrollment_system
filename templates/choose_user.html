@@ -55,14 +55,14 @@
         box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
         padding: 40px;
         width: 100%;
-        max-width: 500px; /* Adjust width here */
+        max-width: 500px;
         text-align: center;
-        margin-top: 80px; /* Space for the welcome bar */
+        margin-top: 80px;
         animation: fadeIn 1.5s ease-in-out;
       }
 
       .title {
-        font-size: 2.5rem; /* Adjust font size */
+        font-size: 2.5rem;
         color: #ffffff;
         margin-bottom: 30px;
         text-align: center;
@@ -78,28 +78,10 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        /* Remove animation */
       }
 
       .btn-custom:hover {
-        /* Remove scaling effect */
-        transform: none; /* Ensure no transformation on hover */
-      }
-
-      .btn-student {
-        background-color: #007bff;
-      }
-
-      .btn-student:hover {
-        background-color: #0056b3;
-      }
-
-      .btn-admin {
-        background-color: #000000;
-      }
-
-      .btn-admin:hover {
-        background-color: #333333;
+        transform: none;
       }
 
       .icon {
@@ -107,31 +89,31 @@
       }
 
       .dropdown-toggle::after {
-        display: none; /* Hide default dropdown icon */
+        display: none;
+      }
+
+      .dropdown-toggle {
+        padding: 10px 20px; /* Adjust padding */
+        font-size: 1.2rem; /* Adjust font size */
+        width: 100%; /* Make the button width full */
       }
 
       .dropdown-menu {
-        min-width: 300px; /* Adjust width here */
-        text-align: left;
+        min-width: 100%; /* Make dropdown menu full width */
       }
 
       .dropdown-item {
         display: flex;
         align-items: center;
+        padding: 10px 15px; /* Adjust padding for a better look */
       }
 
       .dropdown-item .icon {
         margin-right: 10px;
       }
 
-      .dropdown-toggle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
       .dropdown-toggle .fa-chevron-down {
-        margin-left: 10px; /* Space between text and arrow */
+        margin-left: 10px;
       }
 
       /* Responsive Styles */
@@ -142,11 +124,11 @@
         }
 
         .dropdown-menu {
-          min-width: 100%; /* Ensure full width on smaller screens */
+          min-width: 100%;
         }
 
         .title {
-          font-size: 1.5rem; /* Adjust font size for smaller screens */
+          font-size: 1.5rem;
         }
       }
 
@@ -155,17 +137,6 @@
           opacity: 0;
         }
         to {
-          opacity: 1;
-        }
-      }
-
-      @keyframes slideIn {
-        from {
-          transform: translateY(-50px);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
           opacity: 1;
         }
       }
@@ -198,11 +169,10 @@
             id="dropdownMenuButton"
             data-bs-toggle="dropdown"
             aria-expanded="false"
-            style="width: 100%;" /* Adjust width here */
           >
             <i class="fas fa-user icon"></i>
             Choose User Type
-            <i class="fas fa-chevron-down"></i> <!-- Down arrow icon -->
+            <i class="fas fa-chevron-down"></i>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li>
@@ -222,16 +192,16 @@
       </form>
     </div>
 
-    <!-- Bootstrap JS and dependencies (optional for additional functionality) -->
+    <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       function submitForm(userType) {
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '';
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'user_type';
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "";
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "user_type";
         input.value = userType;
         form.appendChild(input);
         document.body.appendChild(form);

@@ -87,7 +87,7 @@ form h2 {
 }
 
 .signupfooter {
-  margin-top: 20px; /* Added margin to separate from form content */
+  margin-top: 20px;
   font-size: 0.9rem;
   display: flex;
   justify-content: center; /* Center align items */

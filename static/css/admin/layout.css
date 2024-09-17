@@ -70,7 +70,7 @@ body {
 
 @media (max-width: 767px) {
   #sidebar.custom-sidebar {
-    width: 200px; /* Fix sidebar width on smaller screens */
+    width: 200px;
     transform: translateX(-200px); /* Initially hide the sidebar */
   }
 
