@@ -4,10 +4,10 @@ def query_db(query, args=()):
     con = sqlite3.connect('advweb.db')
     cur = con.cursor()
     cur.execute(query, args)
-    rv = cur.fetchall()
+    rv = cur.fetchall()  # Fetch all results
     cur.close()
     con.close()
-    return rv if rv else None
+    return rv 
 
 def execute_db(query, args=()):
     con = sqlite3.connect('advweb.db')

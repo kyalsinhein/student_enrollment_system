@@ -74,6 +74,19 @@
               />
             </div>
             <br />
+            <!-- Flash message block -->
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %}
+            <div>
+              {% for category, message in messages %}
+              <div class="alert alert-{{ category }}" role="alert">
+                {{ message }}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %} {% endwith %}
+            <!-- End of Flash message block -->
+            <br />
             <div class="form-group">
               <button class="btn btn-primary w-100" type="submit">
                 Sign Up

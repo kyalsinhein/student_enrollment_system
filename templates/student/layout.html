@@ -63,7 +63,7 @@
                 >Records</a
               >
             </li>
-            {% if username %}
+            {% if uid %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('student_logout') }}"
                 >Logout</a
@@ -77,9 +77,9 @@
             </li>
             {% endif %}
           </ul>
-          {% if username %}
+          {% if uid %}
           <div class="d-flex">
-            <span class="navbar-text me-3">Welcome, {{ username }}!</span>
+            <span class="navbar-text me-3">Welcome, {{ first_name }}!</span>
           </div>
           {% endif %}
         </div>
@@ -119,7 +119,7 @@
             >Records</a
           >
         </li>
-        {% if username %}
+        {% if uid %}
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('student_logout') }}">Logout</a>
         </li>
@@ -129,9 +129,9 @@
         </li>
         {% endif %}
       </ul>
-      {% if username %}
+      {% if uid %}
       <div class="d-flex p-3">
-        <span class="navbar-text">Welcome, {{ username }}!</span>
+        <span class="navbar-text">Welcome, {{ first_name }}!</span>
       </div>
       {% endif %}
     </div>

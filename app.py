@@ -38,7 +38,7 @@ def student_login():
             if user:  # Check if a matching user is found
                 user = user[0]  # Get the first result from the query
                 session['uid'] = user[0]
-                session['username'] = user[1]
+                session['first_name'] = user[1]
                 session['user_type'] = 'student' 
                 return redirect(url_for('home'))
             else:
@@ -49,7 +49,6 @@ def student_login():
             flash("An error occurred during login. Please try again.", 'danger')
 
     return render_template("student/login.html", title="Student Login")
-
 
 # Student Signup Route
 @app.route("/student/signup", methods=["GET", "POST"])
@@ -67,13 +66,19 @@ def student_signup():
             flash("Passwords do not match or are missing. Please try again.", 'danger')
             return render_template("student/signup.html", title="Student Signup")
 
+        # Check if the email already exists
+        existing_students = query_db("SELECT * FROM student WHERE email = ?", (email,))
+        if existing_students:
+            flash("Email is already taken. Please use a different email.", 'danger')
+            return render_template("student/signup.html", title="Student Signup")
+
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
             execute_db("""
-                INSERT INTO student (first_name, last_name, email, phone, address, password) 
+                INSERT INTO student (first_name, last_name, phone, email, address, password) 
                 VALUES (?, ?, ?, ?, ?, ?)
-            """, (first_name, last_name, email, phone, address, hashed_password))
+            """, (first_name, last_name, phone, email, address, hashed_password))
 
             return redirect(url_for('student_login'))
 
@@ -86,22 +91,23 @@ def student_signup():
 # Student Home Route
 @app.route("/student/home")
 def home():
-    if 'username' not in session or session.get('user_type') != 'student':
+    if 'uid' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
     
-    username = session.get('username')
-    return render_template("student/home.html", username=username)
+    first_name = session.get('first_name')
+    uid = session.get('uid')
+    return render_template("student/home.html", first_name=first_name,uid=uid)
 
 # View Profile Route
 @app.route("/student/profile")
 def view_profile():
-    if 'username' not in session or session.get('user_type') != 'student':
+    if 'uid' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
-    username = session.get('username')
-
+    uid = session.get('uid')
+    first_name = session.get('first_name')
     try:
         # Query the database for the student's profile information
-        profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,))
+        profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE id = ?", (uid,))
 
         if not profile:  # If no profile is found, redirect to home
             return redirect(url_for('home'))
@@ -112,14 +118,15 @@ def view_profile():
         print(traceback.format_exc())
         profile = {}
         
-    return render_template("student/profile.html", profile=profile, username=username)
+    return render_template("student/profile.html", profile=profile, first_name=first_name,uid=uid)
 
 @app.route("/student/profile/edit", methods=["GET", "POST"])
 def edit_profile():
-    if 'username' not in session or session.get('user_type') != 'student':
+    if 'uid' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
 
-    username = session.get('username')
+    first_name = session.get('first_name')
+    uid = session.get('uid')
 
     if request.method == "POST":
         first_name = request.form.get('fname')
@@ -129,16 +136,22 @@ def edit_profile():
         address = request.form.get('address')
         password = request.form.get('password')
 
-        # Handle password hashing if provided
-
-        hashed_password = hashlib.md5(password.encode()).hexdigest()
+        # Only update the password if it's not empty
         try:
-            execute_db("""
-                UPDATE student 
-                SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, password = ?
-                WHERE first_name = ?
-            """, (first_name, last_name, email, phone, address, hashed_password, username))
-            session['username'] = first_name  # Update session with the new name if changed
+            if password:
+                execute_db("""
+                    UPDATE student 
+                    SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, password = ?
+                    WHERE id = ?
+                """, (first_name, last_name, email, phone, address, hashlib.md5(password.encode()).hexdigest(), uid))
+            else:
+                execute_db("""
+                    UPDATE student 
+                    SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?
+                    WHERE id = ?
+                """, (first_name, last_name, email, phone, address, uid))
+
+            session['first_name'] = first_name  # Update session with the new name if changed
             return redirect(url_for('view_profile'))
 
         except Exception as e:
@@ -146,7 +159,7 @@ def edit_profile():
 
     else:
         try:
-            profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE first_name = ?", (username,))
+            profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE id = ?", (uid,))
 
             if not profile:
                 return redirect(url_for('home'))
@@ -157,15 +170,17 @@ def edit_profile():
             print(traceback.format_exc())
             profile = {}
 
-        return render_template("student/edit_profile.html", profile=profile, username=username)
+        return render_template("student/edit_profile.html", profile=profile, first_name=first_name, uid=uid)
+
+
 
 
 @app.route('/student/courses')
 def view_courses():
-    if 'username' not in session or session.get('user_type') != 'student':
+    if 'uid' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
-    username = session.get('username')
-    
+    first_name = session.get('first_name')
+    uid = session.get('uid')
     # Get the search query from the request arguments
     search_query = request.args.get('search', '')
     
@@ -180,43 +195,46 @@ def view_courses():
         print(traceback.format_exc())
         courses = []
     
-    return render_template('student/courses.html', courses=courses, username=username)
+    return render_template('student/courses.html', courses=courses, first_name=first_name,uid=uid)
 
 
 @app.route('/student/courses/detail/<int:course_id>')
 def course_detail(course_id):
-    if 'username' not in session or session.get('user_type') != 'student':
+    if 'uid' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
-    username = session.get('username')
-    
+    first_name = session.get('first_name')
+    uid = session.get('uid')
     try:
         # Query the course details
         course = query_db("SELECT name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,))
 
         if course:
             course = course[0]  # Get the first result from the query
-            return render_template('student/course_detail.html', course=course, username=username)
+            return render_template('student/course_detail.html', course=course, first_name=first_name,uid=uid)
         else:
             return "Course not found", 404
     except Exception as e:
         print(traceback.format_exc())
         return "An error occurred while fetching course details.", 500
 
-
 @app.route("/student/enrollment", methods=["GET", "POST"])
 def student_enroll():
-    if 'username' not in session or session.get('user_type') != 'student':
+    if 'uid' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
 
-    # Fetch the full name of the student
-    username = session.get('username')
+    # Fetch the student details
+    uid = session.get('uid')
+    first_name = session.get('first_name')
 
     try:
-        student = query_db("SELECT first_name, last_name FROM student WHERE first_name = ?", (username,))
+        # Fetch the student's full name
+        student = query_db("SELECT first_name, last_name FROM student WHERE id = ?", (uid,))
         if not student:
+            flash("Student not found.", "danger")
             return redirect(url_for('student_enroll'))
+        
+        # Assuming student will always return a result, get the first row
         fullname = f"{student[0][0]} {student[0][1]}"
-
     except Exception as e:
         print(traceback.format_exc())
         flash("An error occurred while fetching student details.", "danger")
@@ -230,12 +248,9 @@ def student_enroll():
             return redirect(url_for('student_enroll'))
 
         try:
-            # Fetch the student ID
-            student_id = query_db("SELECT id FROM student WHERE first_name = ?", (username,))[0][0]
-
             # Check if already enrolled
-            enrollment = query_db("SELECT 1 FROM enrollment WHERE student_id = ? AND course_id = ?", (student_id, course_id))
-            if enrollment:
+            enrollment = query_db("SELECT 1 FROM enrollment WHERE student_id = ? AND course_id = ?", (uid, course_id))
+            if enrollment:  # If any result is returned, the student is already enrolled
                 flash("You are already enrolled in this course!", "warning")
                 return redirect(url_for('student_enroll'))
 
@@ -245,25 +260,29 @@ def student_enroll():
                 flash("Course schedule not found.", "danger")
                 return redirect(url_for('student_enroll'))
 
+            # Split the new schedule's day of week into a set
             new_days = set(new_schedule[0][0].split(', '))
 
+            # Fetch the student's existing schedule
             existing_schedule = query_db("""
                 SELECT sc.day_of_week
                 FROM schedule sc
                 JOIN enrollment e ON sc.course_id = e.course_id
                 WHERE e.student_id = ?
-            """, (student_id,))
+            """, (uid,))
 
+            # Check for conflicts in schedule
             for schedule in existing_schedule:
-                if new_days.intersection(set(schedule[0].split(', '))):
-                    flash("You cannot enrolled this course! You have another class in these days!", "danger")
+                existing_days = set(schedule[0].split(', '))
+                if new_days.intersection(existing_days):
+                    flash("You cannot enroll in this course! You have another class on these days!", "danger")
                     return redirect(url_for('student_enroll'))
 
             # Enroll the student
             execute_db("INSERT INTO enrollment (student_id, course_id, enroll_date) VALUES (?, ?, ?)", 
-                       (student_id, course_id, datetime.now().strftime('%Y-%m-%d')))
+                       (uid, course_id, datetime.now().strftime('%Y-%m-%d')))
             flash("Enrollment successful!", "success")
-            return redirect(url_for('home'))
+            return redirect(url_for('student_enroll'))
 
         except Exception as e:
             print(traceback.format_exc())
@@ -277,21 +296,18 @@ def student_enroll():
         print(f"Exception during GET request: {e}")
         courses = []
 
-    return render_template("student/enroll.html", courses=courses, fullname=fullname,username=username)
-
+    return render_template("student/enroll.html", courses=courses, fullname=fullname, uid=uid,first_name=first_name)
 
 
 
 @app.route('/student/records')
 def view_enrollment_records():
-    if 'username' not in session or session.get('user_type') != 'student':
+    if 'uid' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
 
-    student_id = session.get('uid')  # Get student ID from session
-
-    if not student_id:
-        return redirect(url_for('home'))
-
+    uid = session.get('uid')  # Get student ID from session
+    first_name = session.get('first_name')
+    
     try:
         # Query to get enrollment records along with course names and course_id
         enrollments = query_db("""
@@ -304,7 +320,7 @@ def view_enrollment_records():
             JOIN student s ON e.student_id = s.id
             JOIN course c ON e.course_id = c.id
             WHERE e.student_id = ?
-        """, (student_id,))
+        """, (uid,))
 
         # Query to get the timetable of the current student's enrolled subjects
         timetable = query_db("""
@@ -315,7 +331,7 @@ def view_enrollment_records():
                 SELECT e.course_id FROM enrollment e WHERE e.student_id = ?
             )
             ORDER BY sc.day_of_week, sc.start_time
-        """, (student_id,))
+        """, (uid,))
 
     except Exception as e:
         print(traceback.format_exc())
@@ -325,14 +341,15 @@ def view_enrollment_records():
     return render_template('student/records.html', 
                            enrollments=enrollments, 
                            timetable=timetable, 
-                           username=session.get('username'))
-
+                           first_name=first_name,
+                           uid=uid
+                         )
 
 
 # Student Logout Route
 @app.route("/student/logout")
 def student_logout():
-    session.pop('username', None)
+    session.pop('uid', None)
     return redirect(url_for('choose_user_type'))
 
 # Admin Login Route
@@ -349,8 +366,8 @@ def admin_login():
 
             if user:
                 user = user[0]  # Fetch the first result
-                session['adminuid'] = user[0]
-                session['username'] = user[1]
+                session['admin_uid'] = user[0]
+                session['first_name'] = user[1]
                 session['user_type'] = 'admin'
                 return redirect(url_for('admin_dashboard'))
             else:
@@ -360,10 +377,9 @@ def admin_login():
             print(traceback.format_exc())
             flash("An error occurred during login. Please try again.", 'danger')
 
-    return render_template("admin/login.html", title="Admin Login")
+    return render_template("admin/login.html")
 
 
-# Admin Signup Route (if needed)
 @app.route("/admin/signup", methods=["GET", "POST"])
 def admin_signup():
     if request.method == "POST":
@@ -379,13 +395,19 @@ def admin_signup():
             flash("Passwords do not match or are missing. Please try again.", 'danger')
             return render_template("admin/signup.html", title="Admin Signup")
 
+        # Check if the email already exists
+        existing_admins = query_db("SELECT * FROM admin WHERE email = ?", (email,))
+        if existing_admins:
+            flash("Email is already taken. Please use a different email.", 'danger')
+            return render_template("admin/signup.html", title="Admin Signup")
+
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
             execute_db("""
-                INSERT INTO admin (first_name, last_name, email, phone, address, password) 
+                INSERT INTO admin (first_name, last_name, phone, email, address, password) 
                 VALUES (?, ?, ?, ?, ?, ?)
-            """, (first_name, last_name, email, phone, address, hashed_password))
+            """, (first_name, last_name, phone, email, address, hashed_password))
 
             return redirect(url_for('admin_login'))
 
@@ -395,13 +417,14 @@ def admin_signup():
 
     return render_template("admin/signup.html", title="Admin Signup")
 
+
 @app.route("/admin/dashboard")
 def admin_dashboard():
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
 
-    username = session.get('username')
-
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
     try:
         # Fetch the total counts
         total_students = query_db("SELECT COUNT(*) FROM student")[0][0]
@@ -443,7 +466,8 @@ def admin_dashboard():
 
     return render_template(
         "admin/dashboard.html", 
-        username=username, 
+        first_name=first_name, 
+        admin_uid = admin_uid,
         total_students=total_students, 
         total_courses=total_courses, 
         total_enrollments=total_enrollments, 
@@ -454,10 +478,12 @@ def admin_dashboard():
    
 @app.route("/admin/courses", methods=["GET"])
 def admin_view_courses():
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
 
-    username = session.get('username')
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
+    
     page = int(request.args.get('page', 1))  # Get current page from query parameter, default to 1
     per_page = 6  # Number of courses per page
 
@@ -483,15 +509,17 @@ def admin_view_courses():
         }
         courses_list.append(course_dict)
 
-    return render_template("admin/courses.html", courses=courses_list, username=username, time=time, page=page, total_pages=total_pages)
+    return render_template("admin/courses.html", courses=courses_list, first_name=first_name, admin_uid = admin_uid ,time=time, page=page, total_pages=total_pages)
 
 
 
 
 @app.route("/admin/course/add", methods=["GET", "POST"])
 def add_course():
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
+    
+    admin_uid = session.get('admin_uid')
     # Use absolute path
     upload_folder = os.path.abspath(os.path.join('static', 'images', 'courses'))
     app.config['UPLOAD_FOLDER'] = upload_folder
@@ -500,7 +528,7 @@ def add_course():
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
 
-    username = session.get('username')
+    first_name = session.get('first_name')
     if request.method == "POST":
         name = request.form['name']
         description = request.form['description']
@@ -520,15 +548,17 @@ def add_course():
         except Exception as e:
             print(traceback.format_exc())
 
-    return render_template("admin/addcourse.html", username=username)
+    return render_template("admin/addcourse.html", first_name=first_name,admin_uid=admin_uid )
 
 @app.route("/admin/courses/edit/<int:course_id>", methods=["GET", "POST"])
 def edit_course(course_id):
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
-
+    
+    admin_uid = session.get('admin_uid')
     # Fetch the current course details from the database
     try:
+        first_name = session.get('first_name')
         course = query_db("SELECT id, name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,))
         
         if not course:
@@ -587,7 +617,7 @@ def edit_course(course_id):
             print(traceback.format_exc())
             flash("Error updating course details.", 'danger')
 
-    return render_template("admin/editcourse.html", course=course)
+    return render_template("admin/editcourse.html", course=course, first_name = first_name, admin_uid = admin_uid)
 
 
 @app.route("/admin/courses/delete/<int:id>", methods=["POST"])
@@ -611,11 +641,11 @@ def delete_course(id):
 
 @app.route("/admin/students", methods=["GET"])
 def admin_view_students():
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
 
-    username = session.get('username')
-    
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
     # Get page number from query parameters, default to 1 if not present
     page = int(request.args.get('page', 1))
     per_page = 10  # Number of rows per page
@@ -652,20 +682,22 @@ def admin_view_students():
     return render_template(
         "admin/students.html", 
         students=students_list, 
-        username=username, 
+        first_name=first_name, 
         time=time,
         current_page=page,
-        total_pages=total_pages
+        total_pages=total_pages,
+        admin_uid=admin_uid 
     )
 
 
 
 @app.route("/admin/student/add", methods=["GET", "POST"])
 def add_student():
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
 
-    username = session.get('username')
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
     if request.method == "POST":
         fname = request.form['first_name']
         lname = request.form['last_name']
@@ -684,16 +716,18 @@ def add_student():
         except Exception as e:
             print(traceback.format_exc())
 
-    return render_template("admin/addstudent.html", username=username)
+    return render_template("admin/addstudent.html", first_name=first_name,admin_uid=admin_uid)
 
 
 @app.route("/admin/students/edit/<int:student_id>", methods=["GET", "POST"])
 def edit_student(student_id):
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
-
+    
+    admin_uid = session.get('admin_uid')
     # Fetch the current student details from the database
     try:
+        first_name = session.get('first_name')
         student = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE id = ?", (student_id,))
         
         if not student:
@@ -730,7 +764,7 @@ def edit_student(student_id):
             print(traceback.format_exc())
             flash("Error updating student details.", 'danger')
 
-    return render_template("admin/editstudent.html", student=student)
+    return render_template("admin/editstudent.html", student=student, first_name=first_name,admin_uid=admin_uid)
 
 @app.route("/admin/students/delete/<int:id>", methods=["POST"])
 def delete_student(id):
@@ -747,9 +781,11 @@ def delete_student(id):
 
 @app.route("/admin/schedules", methods=["GET"])
 def admin_view_schedules():
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
 
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
     # Pagination parameters
     per_page = 10
     page = request.args.get('page', 1, type=int)
@@ -778,19 +814,21 @@ def admin_view_schedules():
     return render_template(
         "admin/schedules.html", 
         schedules=schedules_list, 
-        username=session.get('username'), 
         current_page=page, 
-        total_pages=total_pages
+        total_pages=total_pages,
+        first_name = first_name,
+        admin_uid = admin_uid
     )
 
 
 
 @app.route("/admin/schedule/add", methods=["GET", "POST"])
 def add_schedule():
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
 
-    username = session.get('username')
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
     if request.method == "POST":
         course_id = request.form['course_id']
         day_of_week = request.form['day_of_week']
@@ -805,13 +843,15 @@ def add_schedule():
             print(traceback.format_exc())
             flash("Error adding schedule.", 'danger')
 
-    return render_template("admin/addschedule.html", username=username)
+    return render_template("admin/addschedule.html", first_name=first_name,admin_uid=admin_uid)
 
 @app.route("/admin/schedules/edit/<int:schedule_id>", methods=["GET", "POST"])
 def edit_schedule(schedule_id):
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
-
+    
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
     if request.method == "POST":
         course_id = request.form['course_id']
         day_of_week = request.form['day_of_week']
@@ -844,7 +884,7 @@ def edit_schedule(schedule_id):
         flash("Error fetching schedule details.", 'danger')
         return redirect(url_for('admin_view_schedules'))
 
-    return render_template("admin/editschedule.html", schedule=schedule)
+    return render_template("admin/editschedule.html", schedule=schedule, first_name=first_name,admin_uid=admin_uid)
 
 @app.route("/admin/schedules/delete/<int:id>", methods=["POST"])
 def delete_schedule(id):
@@ -860,11 +900,11 @@ def delete_schedule(id):
 
 @app.route("/admin/enrollmentmgt", methods=["GET"])
 def admin_view_enrollment():
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
 
-    username = session.get('username')
-    
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
     # Get the page number from query parameters, default to 1
     page = request.args.get('page', 1, type=int)
     per_page = 10  # Number of enrollments per page
@@ -894,24 +934,26 @@ def admin_view_enrollment():
     return render_template(
         "admin/enrollmentmgmt.html", 
         enrollment_list=enrollment_list, 
-        username=username, 
+        first_name=first_name, 
         current_page=page, 
         total_pages=total_pages, 
-        per_page=per_page
+        per_page=per_page,
+        admin_uid=admin_uid
     )
-
 
 
 @app.route("/admin/enrollment", methods=["GET", "POST"])
 def admin_enroll():
-    
-    if 'username' not in session or session.get('user_type') != 'admin':
+    if 'admin_uid' not in session or session.get('user_type') != 'admin':
         return redirect(url_for('admin_login'))
     
+    first_name = session.get('first_name')
+    admin_uid = session.get('admin_uid')
+
     if request.method == "POST":
         student_id = request.form.get('student_id')
         course_id = request.form.get('course_id')
-        
+
         if not student_id or not course_id:
             return redirect(url_for('admin_enroll'))
 
@@ -929,15 +971,16 @@ def admin_enroll():
 
     try:
         # Get students and courses from the database
-        students = query_db("SELECT id, first_name, last_name FROM student")
-        courses = query_db("SELECT id, name FROM course")
+        students = query_db("SELECT id, first_name, last_name FROM student") or []
+        courses = query_db("SELECT id, name FROM course") or []
 
     except Exception as e:
         print(f"Exception during GET request: {e}")
         students = []
         courses = []
 
-    return render_template("admin/enroll.html", students=students, courses=courses)
+    return render_template("admin/enroll.html", students=students, courses=courses, first_name=first_name, admin_uid=admin_uid)
+
 
 @app.route("/admin/enrollment/delete/<int:id>", methods=["POST"])
 def delete_enrollment(id):
@@ -954,7 +997,7 @@ def delete_enrollment(id):
 # Admin Logout Route
 @app.route("/admin/logout")
 def admin_logout():
-    session.pop('username', None)
+    session.pop('admin_uid', None)
     return redirect(url_for('choose_user_type'))
 
 if __name__ == "__main__":
