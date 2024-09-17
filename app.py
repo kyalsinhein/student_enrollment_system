@@ -8,7 +8,7 @@ from dbcontroller import query_db, execute_db
 import time
 
 app = Flask(__name__)
-app.secret_key = 'secrete'  # Required for flash messages
+app.secret_key = 'secrete'  
 
 # Default Route to Choose User Type
 @app.route("/", methods=["GET", "POST"])
@@ -130,24 +130,14 @@ def edit_profile():
         password = request.form.get('password')
 
         # Handle password hashing if provided
-        if password:
-            hashed_password = hashlib.md5(password.encode()).hexdigest()
-            query = """
+
+        hashed_password = hashlib.md5(password.encode()).hexdigest()
+        try:
+            execute_db("""
                 UPDATE student 
                 SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, password = ?
                 WHERE first_name = ?
-            """
-            args = (first_name, last_name, email, phone, address, hashed_password, username)
-        else:
-            query = """
-                UPDATE student 
-                SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?
-                WHERE first_name = ?
-            """
-            args = (first_name, last_name, email, phone, address, username)
-
-        try:
-            execute_db(query, args)
+            """, (first_name, last_name, email, phone, address, hashed_password, username))
             session['username'] = first_name  # Update session with the new name if changed
             return redirect(url_for('view_profile'))
 
