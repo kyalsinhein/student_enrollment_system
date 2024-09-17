@@ -108,12 +108,6 @@ def view_profile():
     try:
         # Query the database for the student's profile information
         profile = query_db("SELECT first_name, last_name, email, phone, address FROM student WHERE id = ?", (uid,))
-
-        if not profile:  # If no profile is found, redirect to home
-            return redirect(url_for('home'))
-
-        profile = profile[0]  # Get the first result from the query
-
     except Exception as e:
         print(traceback.format_exc())
         profile = {}
