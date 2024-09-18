@@ -344,7 +344,7 @@ def view_enrollment_records():
 @app.route("/student/logout")
 def student_logout():
     session.pop('uid', None)
-    
+    session.pop('first_name', None)
     return redirect(url_for('choose_user_type'))
 
 # Admin Login Route
@@ -993,6 +993,7 @@ def delete_enrollment(id):
 @app.route("/admin/logout")
 def admin_logout():
     session.pop('admin_uid', None)
+    session.pop('first_name', None)
     return redirect(url_for('choose_user_type'))
 
 if __name__ == "__main__":
