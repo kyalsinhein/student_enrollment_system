@@ -344,6 +344,7 @@ def view_enrollment_records():
 @app.route("/student/logout")
 def student_logout():
     session.pop('uid', None)
+    
     return redirect(url_for('choose_user_type'))
 
 # Admin Login Route

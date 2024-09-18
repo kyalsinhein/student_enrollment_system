@@ -81,49 +81,40 @@
   </div>
 
   <!-- Pagination Controls -->
-  <nav aria-label="Page navigation">
+  <nav aria-label="Page navigation" class="pagination-container">
     <ul class="pagination">
+      <!-- Previous Page Button -->
       <li class="page-item {% if page == 1 %}disabled{% endif %}">
         <a
           class="page-link"
           href="{{ url_for('admin_view_courses', page=page-1) }}"
           aria-label="Previous"
         >
-          <span aria-hidden="true">&laquo;</span>
+          <span aria-hidden="true">&laquo;</span> Previous
         </a>
       </li>
-      {% for p in range(1, total_pages + 1) %}
+
+      <!-- Page Numbers -->
+      {% set page_range = [page - 1, page, page + 1] %} {% for p in page_range
+      %} {% if p > 0 and p <= total_pages %}
       <li class="page-item {% if p == page %}active{% endif %}">
         <a class="page-link" href="{{ url_for('admin_view_courses', page=p) }}"
           >{{ p }}</a
         >
       </li>
-      {% endfor %}
+      {% endif %} {% endfor %}
+
+      <!-- Next Page Button -->
       <li class="page-item {% if page == total_pages %}disabled{% endif %}">
         <a
           class="page-link"
           href="{{ url_for('admin_view_courses', page=page+1) }}"
           aria-label="Next"
         >
-          <span aria-hidden="true">&raquo;</span>
+          Next <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
     </ul>
   </nav>
 </div>
-
-<!-- Include jQuery and Bootstrap JavaScript -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-
-<script>
-  $(document).ready(function () {
-    // Display flash messages
-    $("#flash-messages-container .alert").alert();
-    // Automatically hide the alert after 5 seconds
-    setTimeout(function () {
-      $("#flash-messages-container .alert").alert("close");
-    }, 5000);
-  });
-</script>
 {% endblock %}
