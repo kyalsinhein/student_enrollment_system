@@ -1,12 +1,10 @@
-/* Body and Background */
 body {
-  color: #333; /* Set a default text color for better contrast on white */
-  font-family: Arial, sans-serif; /* Optional font change */
+  color: #333;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
 
-/* Remove the dim effect from the overlay */
 body::before {
   content: "";
   position: fixed;
@@ -14,28 +12,27 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: transparent; /* No background overlay */
+  background-color: transparent;
   z-index: 0;
   pointer-events: none;
 }
 
-/* Course Card Styling */
 .card {
   display: flex;
   flex-direction: column;
-  width: 300px; /* Card width */
+  width: 300px;
   height: 100%;
-  border: 1px solid #ddd; /* Subtle border */
-  border-radius: 8px; /* Rounded corners */
+  border: 1px solid #ddd;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  background-color: #fff; /* Ensure cards are white */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
 .card-img-top {
   width: 100%;
   height: 300px;
-  object-fit: cover; /* Maintain image aspect ratio */
+  object-fit: cover;
   object-position: center;
 }
 
@@ -59,31 +56,29 @@ body::before {
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #333; /* Set dark text color */
+  color: #333;
 }
 
 .card-text {
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
-  color: #555; /* Slightly lighter text for the description */
+  color: #555;
 }
 
-/* Responsive Grid Layout for Courses */
 .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem; /* Spacing between cards */
+  gap: 1.5rem;
 }
 
 .col-md-4 {
-  flex: 1 0 30%; /* Three columns in a row */
+  flex: 1 0 30%;
 }
 
 .mb-4 {
   margin-bottom: 1.5rem !important;
 }
 
-/* Flash Messages */
 #flash-messages-container {
   position: fixed;
   top: 20px;
@@ -96,12 +91,11 @@ body::before {
   font-size: 1rem;
   padding: 0.5rem;
   margin-bottom: 1rem;
-  background-color: rgba(0, 128, 0, 0.7); /* Green background */
+  background-color: rgba(0, 128, 0, 0.7);
   border-radius: 5px;
   text-align: center;
 }
 
-/* Course Title */
 .coursetitle {
   color: white;
   font-size: 2rem;
@@ -110,34 +104,32 @@ body::before {
   font-weight: bold;
 }
 
-/* Search Form Styling */
 .search-form {
   width: 100%;
-  max-width: 500px; /* Center the search form */
+  max-width: 500px;
   margin: 0 auto;
 }
 
 .search-form .input-group {
   display: flex;
-  gap: 10px; /* Space between input and button */
+  gap: 10px;
 }
 
 .search-form .form-control {
   flex: 1;
-  border-radius: 20px 0 0 20px; /* Rounded corners for the input */
+  border-radius: 20px 0 0 20px;
 }
 
 .search-form .btn {
-  border-radius: 0 20px 20px 0; /* Rounded corners for the button */
+  border-radius: 0 20px 20px 0;
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .col-md-4 {
-    flex: 1 0 100%; /* Stack the cards on smaller screens */
+    flex: 1 0 100%;
   }
 
   .card-img-top {
-    height: 200px; /* Adjust image height for smaller screens */
+    height: 200px;
   }
 }

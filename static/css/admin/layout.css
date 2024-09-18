@@ -13,14 +13,14 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 250px; /* Default width */
+  width: 250px;
   transition: transform 0.3s ease, width 0.3s ease;
   transform: translateX(0);
   z-index: 1000;
 }
 
 #sidebar.custom-sidebar.collapsed {
-  transform: translateX(-250px); /* Move sidebar off-screen by its width */
+  transform: translateX(-250px);
 }
 
 #sidebar.custom-sidebar .nav-link {
@@ -60,7 +60,7 @@ body {
 
 @media (max-width: 1024px) {
   #sidebar.custom-sidebar {
-    width: 200px; /* Reduce sidebar width on medium screens */
+    width: 200px;
   }
 
   .main-content {

@@ -38,7 +38,6 @@
             </div>
             <br />
 
-            <!-- Flash message block -->
             {% with messages = get_flashed_messages(with_categories=true) %} {%
             if messages %}
             <div>
@@ -49,7 +48,7 @@
               {% endfor %}
             </div>
             {% endif %} {% endwith %}
-            <!-- End of Flash message block -->
+
             <br />
             <div class="form-group">
               <button class="btn btn-primary btn-block" type="submit">

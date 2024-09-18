@@ -1,65 +1,58 @@
-/* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&family=Merriweather:wght@400;700&display=swap");
 
-/* Ensure the body takes up the full height of the viewport */
 html,
 body {
   height: 100%;
   margin: 0;
-  font-family: "Open Sans", sans-serif; /* Default font for the body */
+  font-family: "Open Sans", sans-serif;
 }
 
-/* Ensure the main content area expands to fill the space between navbar and footer */
 body {
   display: flex;
   flex-direction: column;
 }
 
-/* Main container styling */
 .container {
-  flex: 1; /* Makes sure the container takes up the remaining space */
+  flex: 1;
 }
 
-/* Navbar Customization */
 .navbar-custom {
-  background-color: #101820; /* Dark Blue */
-  color: #ffffff; /* Text color: White */
+  background-color: #101820;
+  color: #ffffff;
 }
 
 .container-fluid {
-  background-color: #101820; /* Dark Blue */
+  background-color: #101820;
 }
 
 .navbar-brand i {
-  font-size: 1.5rem; /* Adjust size of the icon */
-  vertical-align: middle; /* Align icon vertically with the text */
+  font-size: 1.5rem;
+  vertical-align: middle;
 }
 
-/* Default navbar padding and link styling */
 .navbar-custom .navbar-brand,
 .navbar-custom .nav-link {
-  color: #ffffff; /* Text color: White */
-  font-family: "Roboto", sans-serif; /* Font for the navbar */
-  padding: 0.5rem 1rem; /* Default padding for smaller screens */
+  color: #ffffff;
+  font-family: "Roboto", sans-serif;
+  padding: 0.5rem 1rem;
 }
 
 .navbar-custom .nav-link:hover {
-  color: #ff4500; /* Accent color: Orange Red */
+  color: #ff4500;
 }
 
-/* Sidebar styling for smaller screens */
 .sidebar {
   position: fixed;
   top: 0;
-  left: -250px; /* Hide sidebar off-screen to the left */
+  left: -250px;
   height: 100%;
   width: 250px;
-  background-color: #101820; /* Dark Blue */
-  color: #ffffff; /* Text color: White */
-  transition: left 0.3s ease; /* Smooth sliding effect */
-  overflow-y: auto; /* Allow scrolling if content overflows */
-  z-index: 1050; /* Ensure sidebar is above other content */
-  padding-top: 60px; /* Space for the top of the sidebar */
+  background-color: #101820;
+  color: #ffffff;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  z-index: 1050;
+  padding-top: 60px;
 }
 
 /* Ensure the sidebar menu is visible when toggled */

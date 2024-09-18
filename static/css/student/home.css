@@ -1,4 +1,3 @@
-/* Base styles for HTML and body */
 html,
 body {
   height: 100%;
@@ -6,13 +5,11 @@ body {
   padding: 0;
 }
 
-/* Ensure the main content area expands to fill the space between navbar and footer */
 body {
   display: flex;
   flex-direction: column;
 }
 
-/* Add background image to the body with dimmed effect */
 body {
   background: url("/static/images/theme/background.jpg") no-repeat center center
     fixed;
@@ -26,45 +23,41 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Dim effect with opacity 0.5 */
-  z-index: 0; /* Ensure the overlay is below the main content */
-  pointer-events: none; /* Allow interaction with content */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* Ensure all other content appears above the dimmed background */
 .container,
 .carousel-container,
 .about-enroll-section,
 .teachers-section {
   position: relative;
-  z-index: 1; /* Keep the content above the dimmed background */
+  z-index: 1;
 }
 
-/* Slider Container Styling */
 .carousel-container {
-  width: 90%; /* Increase the width of the slider */
-  max-width: 1200px; /* Set a maximum width */
-  margin: 0 auto; /* Center the slider horizontally */
-  box-sizing: border-box; /* Ensure padding is included in width calculation */
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-/* Ensure the text-bar is above other content */
 .text-bar {
   position: relative;
-  z-index: 999; /* Ensure it's on top of other elements */
+  z-index: 999;
   color: white;
   padding: 20px 10px;
-  overflow: hidden; /* Hide overflowed text */
+  overflow: hidden;
   margin-bottom: 10px;
   font-size: 1.5rem;
   line-height: 40px;
   height: 80px;
   width: 90%;
-  margin: 0 auto; /* Center the text-bar */
-  white-space: nowrap; /* Prevent wrapping */
+  margin: 0 auto;
+  white-space: nowrap;
 }
 
-/* Animate text from right to left */
 .text-bar p {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -72,55 +65,48 @@ body::before {
   animation: scroll-left 10s linear infinite;
 }
 
-/* Keyframes for animation */
 @keyframes scroll-left {
   0% {
-    transform: translateX(100%); /* Start from the right end */
+    transform: translateX(100%);
   }
   100% {
-    transform: translateX(-100%); /* Move to the left end */
+    transform: translateX(-100%);
   }
 }
 
-/* Enroll Now Section */
 .enroll-section a {
-  color: white; /* Change text color to white */
+  color: white;
   padding: 10px 20px;
   font-size: 16px;
-  display: inline-block; /* Ensure proper button styling */
+  display: inline-block;
 }
 
-/* About Us Section */
 .about-us h4,
 .about-us p {
-  color: white; /* Change text color to white */
+  color: white;
 }
 
-/* Teachers Section */
 .teachers-section h4,
 .teacher-info h5,
 .teacher-info p {
-  color: white; /* Change text color to white */
+  color: white;
 }
 
-/* Slider Image Styling */
 .slider-img {
-  height: 400px; /* Original height */
+  height: 400px;
   object-fit: cover;
   display: block;
   border-radius: 20px;
   width: 100%;
 }
 
-/* Adjusting the height of the carousel inner container */
 .carousel-inner {
-  height: 400px; /* Match this height to the .slider-img height */
+  height: 400px;
 }
 
-/* Container for the image and overlay */
 .carousel-img-container {
   position: relative;
-  height: 400px; /* Match this height to ensure the overlay covers the entire image */
+  height: 400px;
 }
 
 .carousel-caption {
@@ -132,7 +118,6 @@ body::before {
   z-index: 2;
 }
 
-/* Dimming effect for carousel images */
 .carousel-img-container::before {
   content: "";
   position: absolute;
@@ -151,19 +136,17 @@ body::before {
   align-items: center;
   text-align: center;
   padding: 20px;
-  gap: 20px; /* Space between About Us and Enroll Now */
-  width: 100%; /* Ensure full width */
-  box-sizing: border-box; /* Include padding in width calculation */
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* About Us Section Styling */
 .about-us {
-  width: 90%; /* Adjust the width to be responsive */
-  max-width: 600px; /* Set a maximum width */
-  padding: 0 10px; /* Add padding to avoid text touching the edges */
+  width: 90%;
+  max-width: 600px;
+  padding: 0 10px;
 }
 
-/* Enroll Section */
 .enroll-section {
   margin-top: 20px;
 }
@@ -171,14 +154,13 @@ body::before {
 .enroll-section a {
   padding: 10px 20px;
   font-size: 16px;
-  display: inline-block; /* Ensure proper button styling */
+  display: inline-block;
 }
 
 .foundertext {
   margin-bottom: 50px;
 }
 
-/* Teachers Section Styling */
 .teachers-section {
   text-align: center;
   padding: 20px;
@@ -189,7 +171,7 @@ body::before {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 40px; /* Increase space between teacher cards */
+  gap: 40px;
 }
 
 .teacher-card {
@@ -212,33 +194,32 @@ body::before {
   font-size: 1.2rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .carousel-container {
-    width: 100%; /* Full width on smaller screens */
+    width: 100%;
     margin-top: 20px;
   }
 
   .slider-img {
-    height: 250px; /* Decrease height for smaller screens */
+    height: 250px;
   }
 
   .carousel-inner,
   .carousel-img-container {
-    height: 250px; /* Adjust height accordingly */
+    height: 250px;
   }
 
   .about-enroll-section {
-    width: 100%; /* Full width with padding */
-    margin-top: 20px; /* Adjust spacing */
+    width: 100%;
+    margin-top: 20px;
   }
 
   .about-us {
-    width: 100%; /* Full width for smaller screens */
-    padding: 0 10px; /* Add some padding to avoid text touching the edges */
+    width: 100%;
+    padding: 0 10px;
   }
 
   .enroll-section a {
-    font-size: 14px; /* Smaller font size for smaller screens */
+    font-size: 14px;
   }
 }

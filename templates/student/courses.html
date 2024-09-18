@@ -3,10 +3,8 @@
 
 <center>
   <div class="container mt-4">
-    <!-- Section for All Courses -->
     <h1 class="coursetitle mb-4">Our Courses</h1>
 
-    <!-- Search Bar -->
     <form
       method="GET"
       action="{{ url_for('view_courses') }}"
@@ -24,7 +22,6 @@
       </div>
     </form>
 
-    <!-- Courses Section -->
     <div id="courses-list" class="row">
       {% if courses %} {% for course in courses %}
       <div class="col-md-4 mb-4 course-item">
@@ -51,7 +48,6 @@
       {% endif %}
     </div>
 
-    <!-- Pagination Controls -->
     <nav aria-label="Page navigation">
       <ul class="pagination" id="pagination-controls">
         <li class="page-item" id="previous-page">
@@ -65,7 +61,6 @@
   </div>
 </center>
 
-<!-- JavaScript for Pagination -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const coursesPerPage = 6;
@@ -114,7 +109,6 @@
       }
     });
 
-    // Initialize
     showPage(currentPage);
     updatePaginationControls();
   });

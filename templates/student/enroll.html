@@ -1,5 +1,4 @@
 {% extends "/student/layout.html" %} {% block content %}
-<!-- Registration 13 - Bootstrap Brain Component -->
 <section class="py-3 py-md-5">
   <div class="container">
     <div class="row justify-content-center">
@@ -33,7 +32,6 @@
             </div>
             {% endif %} {% endwith %}
 
-            <!-- Enrollment Form -->
             <form action="{{ url_for('student_enroll') }}" method="POST">
               <div class="row gy-2 overflow-hidden">
                 <div class="col-12">
