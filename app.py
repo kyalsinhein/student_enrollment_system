@@ -159,8 +159,6 @@ def edit_profile():
         return render_template("student/edit_profile.html", profile=profile, first_name=first_name, uid=uid)
 
 
-
-
 @app.route('/student/courses')
 def view_courses():
     if 'uid' not in session or session.get('user_type') != 'student':
