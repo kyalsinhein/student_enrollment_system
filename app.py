@@ -649,8 +649,8 @@ def admin_view_students():
             "id": student[0],
             "fname": student[1],
             "lname": student[2],
-            "email": student[3],
-            "phone": student[4],
+            "email": student[4],
+            "phone": student[3],
             "address": student[5],
         }
         students_list.append(student_dict)
