@@ -1,6 +1,5 @@
 # student_enrollment_system
-I developed a web-based Student Enrollment System for my BSc Computing final year project, designed to digitize and simplify enrollment. The system centralizes records and documents, streamlines workflows, reduces errors and paperwork, secures student data, and provides efficient access for staff and students.
-
+For my BSc Computing final-year project, I developed a web-based Student Enrollment System to digitize and simplify the enrollment process. The system centralizes student records and documents, streamlines administrative workflows, enhances data security, reduces errors and paperwork, and provides efficient access for both staff and students.
 
 ## 🔑 Default Admin Account
 
