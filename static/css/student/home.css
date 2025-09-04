@@ -5,15 +5,25 @@ body {
   padding: 0;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
+html {
+  /* Move background image to html to cover whole page */
+  background-image: url("/static/images/theme/background.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
 }
 
 body {
-  background: url("/static/images/theme/background.jpg") no-repeat center center
-    fixed;
-  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: transparent; /* Remove background from body */
+  position: relative;
+  z-index: 1;
 }
 
 body::before {
