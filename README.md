@@ -11,6 +11,6 @@ Since admins cannot create new accounts, a default administrator account is prov
   
 ## ⚙️ Technologies Used
 
-- **Frontend:** HTML, CSS, JavaScript  
+- **Frontend:** HTML, CSS
 - **Backend:** Python (Flask)  
 - **Database:** MySQL  
