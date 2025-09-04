@@ -6,7 +6,7 @@ I developed a web-based Student Enrollment System for my BSc Computing final yea
 
 Since admins cannot create new accounts, a default administrator account is provided for system access:
 
-- **Username (Email):** admin123@gmail.com  
+- **Email:** admin123@gmail.com  
 - **Password:** 123
   
 ## ⚙️ Technologies Used
