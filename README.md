@@ -13,4 +13,4 @@ Since admins cannot create new accounts, a default administrator account is prov
 
 - **Frontend:** HTML, CSS
 - **Backend:** Python 
-- **Database:** MySQL  
+- **Database:** SQLite
