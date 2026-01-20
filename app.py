@@ -70,10 +70,8 @@ def student_signup():
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
-            execute_db("""
-                INSERT INTO student (first_name, last_name, phone, email, address, password) 
-                VALUES (?, ?, ?, ?, ?, ?)
-            """, (first_name, last_name, phone, email, address, hashed_password))
+            execute_db("INSERT INTO student (first_name, last_name, email, phone, address, password) VALUES (?, ?, ?, ?, ?, ?)",
+           (first_name, last_name, email, phone, address, hashed_password))
 
             return redirect(url_for('student_login'))
 
