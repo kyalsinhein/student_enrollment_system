@@ -8,6 +8,15 @@ body {
 }
 
 body {
+  /* Dim the background image by layering a semi‑transparent gradient over it */
+  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+              url("/static/images/theme/background.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  position: relative;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -55,31 +64,27 @@ body {
   padding-top: 60px;
 }
 
-/* Ensure the sidebar menu is visible when toggled */
 .sidebar.show {
-  left: 0; /* Show sidebar */
+  left: 0;
 }
 
-/* Toggle button and icons color */
 #sidebarToggle {
-  color: #ffffff; /* Ensure the button text is white */
+  color: #ffffff;
 }
 
 #sidebarToggle .toggle-icon {
-  color: #ffffff !important; /* Ensure the toggle icons are white */
+  color: #ffffff !important;
 }
 
-/* Sidebar menu items */
 .sidebar .nav-link {
-  color: #ffffff; /* Text color: White */
-  padding: 1rem; /* Add padding for spacing */
+  color: #ffffff;
+  padding: 1rem;
 }
 
 .sidebar .nav-link:hover {
-  color: #ff4500; /* Accent color: Orange Red */
+  color: #ff4500;
 }
 
-/* Change the color of the btn-close button to white */
 .btn-close {
   background-color: #ffffff !important;
 }
@@ -88,33 +93,30 @@ body {
   background-color: white;
 }
 
-/* Larger screens: Maintain fixed height */
 @media (min-width: 768px) {
   .navbar-custom {
-    height: 80px; /* Fixed height for larger screens */
+    height: 80px;
   }
 
   .navbar-custom .navbar-brand,
   .navbar-custom .nav-link {
-    line-height: 80px; /* Center the text vertically */
+    line-height: 80px;
   }
 }
 
-/* Style for the username display */
 .navbar-text {
-  color: #ffffff; /* White text color for the username */
-  font-family: "Roboto", sans-serif; /* Font for the username */
+  color: #ffffff;
+  font-family: "Roboto", sans-serif;
 }
 
-/* Footer Styling */
 .footer {
-  background-color: #101820; /* Dark Blue */
+  background-color: #101820;
   color: #ffffff;
   padding: 40px 0;
   font-family: "Open Sans", sans-serif;
-  box-shadow: none; /* Ensure no shadow is applied */
+  box-shadow: none;
   position: relative;
-  z-index: 2; /* Ensure footer is above the dimmed background */
+  z-index: 2;
 }
 
 .footer h5 {
@@ -157,22 +159,15 @@ body {
   margin: 20px 0;
 }
 
-/* Button Styles */
 .btn-primary {
-  background-color: #ff4500; /* Primary button color: Deep Orange */
-  color: #ffffff; /* Button text color: White */
+  background-color: #ff4500;
+  color: #ffffff;
 }
 
 .btn-primary:hover {
-  background-color: black; /* Lighter Orange on hover */
-}
-
-/* General Layout Adjustments */
-body {
-  background: linear-gradient(135deg, #4b79a1 0%, #283e51 100%) no-repeat center
-    center fixed;
+  background-color: black;
 }
 
 .nav-item .active {
-  color: #ff4500; /* Highlight active link with accent color */
+  color: #ff4500;
 }

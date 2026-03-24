@@ -5,22 +5,21 @@ from datetime import datetime
 import hashlib
 import traceback
 from dbcontroller import query_db, execute_db
+from init_db import init_db
 import time
 
 app = Flask(__name__)
-app.secret_key = 'secrete'  
+app.secret_key = 'secrete'
 
-@app.route("/", methods=["GET", "POST"])
-def choose_user_type():
-    if request.method == "POST":
-        user_type = request.form.get('user_type')
+# Ensure all tables exist on startup
+init_db()
 
-        if user_type == "student":
-            return redirect(url_for('student_login'))
-        elif user_type == "admin":
-            return redirect(url_for('admin_login'))
+# Root route now redirects to student login (no more choose user page)
+@app.route("/")
+def index():
+    return redirect(url_for('student_login'))
 
-    return render_template("choose_user.html", title="Choose User Type")
+# ==================== STUDENT ROUTES ====================
 
 @app.route("/student/login", methods=["GET", "POST"])
 def student_login():
@@ -73,6 +72,7 @@ def student_signup():
             execute_db("INSERT INTO student (first_name, last_name, email, phone, address, password) VALUES (?, ?, ?, ?, ?, ?)",
            (first_name, last_name, email, phone, address, hashed_password))
 
+            flash("Account created successfully! Please log in.", 'success')
             return redirect(url_for('student_login'))
 
         except Exception as e:
@@ -81,7 +81,6 @@ def student_signup():
 
     return render_template("student/signup.html", title="Student Signup")
 
-
 @app.route("/student/home")
 def home():
     if 'uid' not in session or session.get('user_type') != 'student':
@@ -89,7 +88,7 @@ def home():
     
     first_name = session.get('first_name')
     uid = session.get('uid')
-    return render_template("student/home.html", first_name=first_name,uid=uid)
+    return render_template("student/home.html", first_name=first_name, uid=uid)
 
 @app.route("/student/profile")
 def view_profile():
@@ -103,7 +102,7 @@ def view_profile():
         print(traceback.format_exc())
         profile = {}
         
-    return render_template("student/profile.html", profile=profile, first_name=first_name,uid=uid)
+    return render_template("student/profile.html", profile=profile, first_name=first_name, uid=uid)
 
 @app.route("/student/profile/edit", methods=["GET", "POST"])
 def edit_profile():
@@ -156,7 +155,6 @@ def edit_profile():
 
         return render_template("student/edit_profile.html", profile=profile, first_name=first_name, uid=uid)
 
-
 @app.route('/student/courses')
 def view_courses():
     if 'uid' not in session or session.get('user_type') != 'student':
@@ -167,9 +165,7 @@ def view_courses():
     search_query = request.args.get('search', '')
     
     try:
-
         if search_query:
-
             courses = query_db("SELECT id, name, image, description FROM course WHERE name LIKE ?", ('%' + search_query + '%',))
         else:
             courses = query_db("SELECT id, name, image, description FROM course")
@@ -177,8 +173,7 @@ def view_courses():
         print(traceback.format_exc())
         courses = []
     
-    return render_template('student/courses.html', courses=courses, first_name=first_name,uid=uid)
-
+    return render_template('student/courses.html', courses=courses, first_name=first_name, uid=uid)
 
 @app.route('/student/courses/detail/<int:course_id>')
 def course_detail(course_id):
@@ -187,12 +182,11 @@ def course_detail(course_id):
     first_name = session.get('first_name')
     uid = session.get('uid')
     try:
-
         course = query_db("SELECT name, image, description, credits, lecturer FROM course WHERE id = ?", (course_id,))
 
         if course:
             course = course[0]  
-            return render_template('student/course_detail.html', course=course, first_name=first_name,uid=uid)
+            return render_template('student/course_detail.html', course=course, first_name=first_name, uid=uid)
         else:
             return "Course not found", 404
     except Exception as e:
@@ -204,18 +198,15 @@ def student_enroll():
     if 'uid' not in session or session.get('user_type') != 'student':
         return redirect(url_for('student_login'))
 
-
     uid = session.get('uid')
     first_name = session.get('first_name')
 
     try:
-  
         student = query_db("SELECT first_name, last_name FROM student WHERE id = ?", (uid,))
         if not student:
             flash("Student not found.", "danger")
             return redirect(url_for('student_enroll'))
         
-
         fullname = f"{student[0][0]} {student[0][1]}"
     except Exception as e:
         print(traceback.format_exc())
@@ -230,7 +221,6 @@ def student_enroll():
             return redirect(url_for('student_enroll'))
 
         try:
-
             enrollment = query_db("SELECT 1 FROM enrollment WHERE student_id = ? AND course_id = ?", (uid, course_id))
             if enrollment:  
                 flash("You are already enrolled in this course!", "warning")
@@ -241,9 +231,7 @@ def student_enroll():
                 flash("Course schedule not found.", "danger")
                 return redirect(url_for('student_enroll'))
 
-
             new_days = set(new_schedule[0][0].split(', '))
-
 
             existing_schedule = query_db("""
                 SELECT sc.day_of_week
@@ -269,15 +257,12 @@ def student_enroll():
             return redirect(url_for('student_enroll'))
 
     try:
-
         courses = query_db("SELECT id, name FROM course")
     except Exception as e:
         print(f"Exception during GET request: {e}")
         courses = []
 
-    return render_template("student/enroll.html", courses=courses, fullname=fullname, uid=uid,first_name=first_name)
-
-
+    return render_template("student/enroll.html", courses=courses, fullname=fullname, uid=uid, first_name=first_name)
 
 @app.route('/student/records')
 def view_enrollment_records():
@@ -288,7 +273,6 @@ def view_enrollment_records():
     first_name = session.get('first_name')
     
     try:
-
         enrollments = query_db("""
             SELECT e.student_id, 
                    s.first_name || ' ' || s.last_name AS fullname, 
@@ -300,7 +284,6 @@ def view_enrollment_records():
             JOIN course c ON e.course_id = c.id
             WHERE e.student_id = ?
         """, (uid,))
-
 
         timetable = query_db("""
             SELECT sc.course_id, c.name AS course_name, sc.day_of_week, sc.start_time, sc.end_time
@@ -321,17 +304,15 @@ def view_enrollment_records():
                            enrollments=enrollments, 
                            timetable=timetable, 
                            first_name=first_name,
-                           uid=uid
-                         )
-
-
+                           uid=uid)
 
 @app.route("/student/logout")
 def student_logout():
     session.pop('uid', None)
     session.pop('first_name', None)
-    return redirect(url_for('choose_user_type'))
+    return redirect(url_for('student_login'))
 
+# ==================== ADMIN ROUTES (unchanged) ====================
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
@@ -341,7 +322,6 @@ def admin_login():
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
-
             user = query_db("SELECT id, first_name FROM admin WHERE email = ? AND password = ?", (email, hashed_password))
 
             if user:
@@ -359,7 +339,6 @@ def admin_login():
 
     return render_template("admin/login.html")
 
-
 @app.route("/admin/signup", methods=["GET", "POST"])
 def admin_signup():
     if request.method == "POST":
@@ -374,7 +353,6 @@ def admin_signup():
         if not password or not confirm_password or password != confirm_password:
             flash("Passwords do not match or are missing. Please try again.", 'danger')
             return render_template("admin/signup.html", title="Admin Signup")
-
 
         existing_admins = query_db("SELECT * FROM admin WHERE email = ?", (email,))
         if existing_admins:
@@ -397,7 +375,6 @@ def admin_signup():
 
     return render_template("admin/signup.html", title="Admin Signup")
 
-
 @app.route("/admin/dashboard")
 def admin_dashboard():
     if 'admin_uid' not in session or session.get('user_type') != 'admin':
@@ -406,16 +383,13 @@ def admin_dashboard():
     first_name = session.get('first_name')
     admin_uid = session.get('admin_uid')
     try:
-
         total_students = query_db("SELECT COUNT(*) FROM student")[0][0]
         total_courses = query_db("SELECT COUNT(*) FROM course")[0][0]
         total_enrollments = query_db("SELECT COUNT(*) FROM enrollment")[0][0]
 
-
         page = request.args.get('page', 1, type=int)
         per_page = 10
         offset = (page - 1) * per_page
-
 
         enrolled_students = query_db("""
             SELECT 
@@ -428,7 +402,6 @@ def admin_dashboard():
             JOIN course ON enrollment.course_id = course.id
             LIMIT ? OFFSET ?
         """, (per_page, offset))
-
 
         total_enrolled_students = query_db("""
             SELECT COUNT(*) 
@@ -447,7 +420,7 @@ def admin_dashboard():
     return render_template(
         "admin/dashboard.html", 
         first_name=first_name, 
-        admin_uid = admin_uid,
+        admin_uid=admin_uid,
         total_students=total_students, 
         total_courses=total_courses, 
         total_enrollments=total_enrollments, 
@@ -467,13 +440,10 @@ def admin_view_courses():
     page = int(request.args.get('page', 1))  
     per_page = 6 
 
-
     total_courses = query_db("SELECT COUNT(*) FROM course")[0][0]
-
 
     offset = (page - 1) * per_page
     total_pages = (total_courses + per_page - 1) // per_page 
-
 
     courses = query_db("SELECT * FROM course LIMIT ? OFFSET ?", (per_page, offset))
 
@@ -489,10 +459,7 @@ def admin_view_courses():
         }
         courses_list.append(course_dict)
 
-    return render_template("admin/courses.html", courses=courses_list, first_name=first_name, admin_uid = admin_uid ,time=time, page=page, total_pages=total_pages)
-
-
-
+    return render_template("admin/courses.html", courses=courses_list, first_name=first_name, admin_uid=admin_uid, time=time, page=page, total_pages=total_pages)
 
 @app.route("/admin/course/add", methods=["GET", "POST"])
 def add_course():
@@ -517,7 +484,6 @@ def add_course():
         filename = secure_filename(cfile.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-
         try:
             cfile.save(file_path)
             execute_db("INSERT INTO course (name, image, description, credits, lecturer) VALUES (?, ?, ?, ?, ?)",
@@ -527,7 +493,7 @@ def add_course():
         except Exception as e:
             print(traceback.format_exc())
 
-    return render_template("admin/addcourse.html", first_name=first_name,admin_uid=admin_uid )
+    return render_template("admin/addcourse.html", first_name=first_name, admin_uid=admin_uid)
 
 @app.route("/admin/courses/edit/<int:course_id>", methods=["GET", "POST"])
 def edit_course(course_id):
@@ -551,14 +517,11 @@ def edit_course(course_id):
         flash("Error fetching course details.", 'danger')
         return redirect(url_for('admin_view_courses'))
 
-
     upload_folder = os.path.abspath(os.path.join('static', 'images', 'courses'))
     app.config['UPLOAD_FOLDER'] = upload_folder
 
-
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
-
 
     if request.method == "POST":
         name = request.form['name']
@@ -577,11 +540,9 @@ def edit_course(course_id):
                 flash("Error uploading image.", 'danger')
                 return render_template("admin/editcourse.html", course=course)
         else:
-
             filename = course[2]
 
         try:
-
             execute_db("""
                 UPDATE course 
                 SET name = ?, image = ?, description = ?, credits = ?, lecturer = ?
@@ -595,13 +556,11 @@ def edit_course(course_id):
             print(traceback.format_exc())
             flash("Error updating course details.", 'danger')
 
-    return render_template("admin/editcourse.html", course=course, first_name = first_name, admin_uid = admin_uid)
-
+    return render_template("admin/editcourse.html", course=course, first_name=first_name, admin_uid=admin_uid)
 
 @app.route("/admin/courses/delete/<int:id>", methods=["POST"])
 def delete_course(id):
     try:
-
         enrollment_count = query_db("SELECT COUNT(*) FROM enrollment WHERE course_id = ?", (id,))
         
         if enrollment_count and enrollment_count[0][0] > 0:
@@ -616,7 +575,6 @@ def delete_course(id):
 
     return redirect(url_for('admin_view_courses'))
 
-
 @app.route("/admin/students", methods=["GET"])
 def admin_view_students():
     if 'admin_uid' not in session or session.get('user_type') != 'admin':
@@ -628,13 +586,11 @@ def admin_view_students():
     page = int(request.args.get('page', 1))
     per_page = 10 
     
-
     total_students_query = "SELECT COUNT(*) FROM student"
     total_students = query_db(total_students_query)[0][0]
 
     offset = (page - 1) * per_page
     
-
     students_query = f"""
         SELECT * FROM student
         LIMIT {per_page} OFFSET {offset}
@@ -665,8 +621,6 @@ def admin_view_students():
         admin_uid=admin_uid 
     )
 
-
-
 @app.route("/admin/student/add", methods=["GET", "POST"])
 def add_student():
     if 'admin_uid' not in session or session.get('user_type') != 'admin':
@@ -682,7 +636,6 @@ def add_student():
         address = request.form['address']
         password = request.form['password']
 
-
         hashed_password = hashlib.md5(password.encode()).hexdigest()
 
         try:
@@ -692,8 +645,7 @@ def add_student():
         except Exception as e:
             print(traceback.format_exc())
 
-    return render_template("admin/addstudent.html", first_name=first_name,admin_uid=admin_uid)
-
+    return render_template("admin/addstudent.html", first_name=first_name, admin_uid=admin_uid)
 
 @app.route("/admin/students/edit/<int:student_id>", methods=["GET", "POST"])
 def edit_student(student_id):
@@ -717,7 +669,6 @@ def edit_student(student_id):
         flash("Error fetching student details.", 'danger')
         return redirect(url_for('admin_view_students'))
 
-
     if request.method == "POST":
         fname = request.form['first_name']
         lname = request.form['last_name']
@@ -726,7 +677,6 @@ def edit_student(student_id):
         address = request.form['address']
         
         try:
-
             execute_db("""
                 UPDATE student 
                 SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?
@@ -740,14 +690,13 @@ def edit_student(student_id):
             print(traceback.format_exc())
             flash("Error updating student details.", 'danger')
 
-    return render_template("admin/editstudent.html", student=student, first_name=first_name,admin_uid=admin_uid)
+    return render_template("admin/editstudent.html", student=student, first_name=first_name, admin_uid=admin_uid)
 
 @app.route("/admin/students/delete/<int:id>", methods=["POST"])
 def delete_student(id):
     try:
-
-            execute_db("DELETE FROM student WHERE id = ?", (id,))
-            flash("Student deleted successfully.", 'success')
+        execute_db("DELETE FROM student WHERE id = ?", (id,))
+        flash("Student deleted successfully.", 'success')
 
     except Exception as e:
         print(traceback.format_exc())
@@ -768,7 +717,6 @@ def admin_view_schedules():
 
     schedules = query_db("SELECT * FROM schedule")
     
-
     total_schedules = len(schedules)
     total_pages = (total_schedules + per_page - 1) // per_page
 
@@ -790,11 +738,9 @@ def admin_view_schedules():
         schedules=schedules_list, 
         current_page=page, 
         total_pages=total_pages,
-        first_name = first_name,
-        admin_uid = admin_uid
+        first_name=first_name,
+        admin_uid=admin_uid
     )
-
-
 
 @app.route("/admin/schedule/add", methods=["GET", "POST"])
 def add_schedule():
@@ -817,7 +763,7 @@ def add_schedule():
             print(traceback.format_exc())
             flash("Error adding schedule.", 'danger')
 
-    return render_template("admin/addschedule.html", first_name=first_name,admin_uid=admin_uid)
+    return render_template("admin/addschedule.html", first_name=first_name, admin_uid=admin_uid)
 
 @app.route("/admin/schedules/edit/<int:schedule_id>", methods=["GET", "POST"])
 def edit_schedule(schedule_id):
@@ -857,7 +803,7 @@ def edit_schedule(schedule_id):
         flash("Error fetching schedule details.", 'danger')
         return redirect(url_for('admin_view_schedules'))
 
-    return render_template("admin/editschedule.html", schedule=schedule, first_name=first_name,admin_uid=admin_uid)
+    return render_template("admin/editschedule.html", schedule=schedule, first_name=first_name, admin_uid=admin_uid)
 
 @app.route("/admin/schedules/delete/<int:id>", methods=["POST"])
 def delete_schedule(id):
@@ -898,7 +844,6 @@ def admin_view_enrollment():
         }
         enrollment_list.append(enrollment_dict)
 
-
     total_pages = (total_enrollment + per_page - 1) // per_page
 
     return render_template(
@@ -910,7 +855,6 @@ def admin_view_enrollment():
         per_page=per_page,
         admin_uid=admin_uid
     )
-
 
 @app.route("/admin/enrollment", methods=["GET", "POST"])
 def admin_enroll():
@@ -928,7 +872,6 @@ def admin_enroll():
             return redirect(url_for('admin_enroll'))
 
         try:
-
             execute_db("""
                 INSERT INTO enrollment (student_id, course_id, enroll_date) 
                 VALUES (?, ?, ?)
@@ -950,12 +893,11 @@ def admin_enroll():
 
     return render_template("admin/enroll.html", students=students, courses=courses, first_name=first_name, admin_uid=admin_uid)
 
-
 @app.route("/admin/enrollment/delete/<int:id>", methods=["POST"])
 def delete_enrollment(id):
     try:
-            execute_db("DELETE FROM enrollment WHERE id = ?", (id,))
-            flash("Enrollment deleted successfully.", 'success')
+        execute_db("DELETE FROM enrollment WHERE id = ?", (id,))
+        flash("Enrollment deleted successfully.", 'success')
 
     except Exception as e:
         print(traceback.format_exc())
@@ -967,7 +909,7 @@ def delete_enrollment(id):
 def admin_logout():
     session.pop('admin_uid', None)
     session.pop('first_name', None)
-    return redirect(url_for('choose_user_type'))
+    return redirect(url_for('student_login'))
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -6,7 +6,6 @@ body {
 }
 
 html {
-  /* Move background image to html to cover whole page */
   background-image: url("/static/images/theme/background.jpg");
   background-repeat: no-repeat;
   background-position: center center;
@@ -21,7 +20,7 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  background: transparent; /* Remove background from body */
+  background: transparent; 
   position: relative;
   z-index: 1;
 }

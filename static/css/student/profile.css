@@ -2,16 +2,21 @@
   max-width: 500px;
   margin: 0 auto;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   margin-bottom: 50px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  color: #222;
 }
 
 .card-body p {
   text-align: justify;
+  color: #222;
 }
 
 .card-body h2 {
   text-align: center;
+  color: #111;
 }
 
 .card-body .btn {
