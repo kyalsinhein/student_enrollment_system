@@ -1,6 +1,6 @@
 import sqlite3
 
-DB_NAME = 'advweb.db'
+from dbcontroller import DB_NAME
 
 def init_db():
     con = sqlite3.connect(DB_NAME)
