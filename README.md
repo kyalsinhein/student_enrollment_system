@@ -4,8 +4,10 @@ For my BSc Computing final-year project, I implemented a web-based Student Enrol
 
 ## How to run it 
 
+```bash
 pip install Flask werkzeug gunicorn
 python app.py
+```
 
 ## ⚙️ Technologies Used
 
